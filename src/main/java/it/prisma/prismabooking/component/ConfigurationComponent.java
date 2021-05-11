@@ -8,6 +8,6 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties("prisma-booking")
 @Data
 public class ConfigurationComponent {
-    private int defaultPageSizeLimit;
-    private int maxPageSizeLimit;
+    private Integer defaultPageSizeLimit;
+    private Integer maxPageSizeLimit;
 }
