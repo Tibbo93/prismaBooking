@@ -1,0 +1,33 @@
+spring:
+  config:
+    activate:
+      on-profile: dev, default
+
+prisma-booking:
+  default-page-size-limit: 10
+  max-page-size-limit: 10000
+
+server:
+  port: 8081
+---
+spring:
+  profiles:
+    active: staging
+
+prisma-booking:
+  default-page-size-limit: 10
+  max-page-size-limit: 100
+
+server:
+  port: 8081
+---
+spring:
+  profiles:
+    active: prod
+
+prisma-booking:
+  default-page-size-limit: 10
+  max-page-size-limit: 100
+
+server:
+  port: 8080
