@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -17,6 +18,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @Slf4j
@@ -48,7 +50,9 @@ public class BuildingService extends BaseService<Building> {
 
         list.add(building);
         try {
-            Files.write(buildingsFile.getFile().toPath(), gson.toJson(Building.class).getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
+            Files.write(buildingsFile.getFile().toPath(),
+                    gson.toJson(building).concat(System.lineSeparator()).getBytes(StandardCharsets.UTF_8),
+                    StandardOpenOption.APPEND);
         } catch (IOException e) {
             log.error(e.getMessage());
         }
@@ -66,6 +70,17 @@ public class BuildingService extends BaseService<Building> {
                     StandardOpenOption.TRUNCATE_EXISTING);
         } catch (IOException e) {
             log.error(e.getMessage());
+        }
+    }
+
+    @PostConstruct
+    public void init() {
+        if (!buildingsFile.exists())
+            return;
+        try (Stream<String> lines = Files.lines(buildingsFile.getFile().toPath())) {
+            lines.forEach(line -> list.add(gson.fromJson(line, Building.class)));
+        } catch (IOException e) {
+            log.error("Error parsing line with cause: {}", e.getMessage());
         }
     }
 }

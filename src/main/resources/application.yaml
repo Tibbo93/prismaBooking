@@ -11,8 +11,9 @@ server:
   port: 8081
 ---
 spring:
-  profiles:
-    active: staging
+  config:
+    activate:
+      on-profile: staging
 
 prisma-booking:
   default-page-size-limit: 10
@@ -22,8 +23,9 @@ server:
   port: 8081
 ---
 spring:
-  profiles:
-    active: prod
+  config:
+    activate:
+      on-profile: prod
 
 prisma-booking:
   default-page-size-limit: 10
