@@ -1,6 +1,7 @@
 package it.prisma.prismabooking.service;
 
 import it.prisma.prismabooking.component.ConfigurationComponent;
+import it.prisma.prismabooking.model.PagedRes;
 import it.prisma.prismabooking.model.room.Room;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -14,19 +15,33 @@ import java.util.UUID;
 @Service
 public class RoomService extends BaseService<Room> {
 
-    @Value("file:src/main/resources/rooms.json")
+    @Value("file:src/main/resources/data/rooms.json")
     Resource roomsFile;
+    BuildingService buildingService;
 
-    public RoomService(ConfigurationComponent configurationComponent) {
+    public RoomService(ConfigurationComponent configurationComponent, BuildingService buildingService) {
         super.config = configurationComponent;
+        this.buildingService = buildingService;
     }
 
-    public Room createRoom(Room room) {
-        if (!Optional.ofNullable(room.getId()).isPresent())
+    public PagedRes<Room> findPage(Integer offset, Integer limit, String buildingId) {
+        buildingService.findResource(buildingId);
+        return findPage(offset, limit);
+    }
+
+    public Room findRoom(String roomId, String buildinId) {
+        buildingService.findResource(buildinId);
+        return findResource(roomId);
+    }
+
+    public Room createRoom(Room room, String buildingId) {
+        buildingService.findResource(buildingId);
+        if (!Optional.ofNullable(room.getId()).isPresent()) {
             room.setId(UUID.randomUUID().toString());
-        else {
+            room.setBuildingId(buildingId);
+        } else {
             findResource(room.getId());
-            deleteRoom(room.getId());
+            deleteRoom(room.getId(), buildingId);
         }
 
         list.add(room);
@@ -34,7 +49,8 @@ public class RoomService extends BaseService<Room> {
         return room;
     }
 
-    public void deleteRoom(String roomId) {
+    public void deleteRoom(String roomId, String buildingId) {
+        buildingService.findResource(buildingId);
         list.remove(findResource(roomId));
         deleteFromJSON(roomsFile);
     }
