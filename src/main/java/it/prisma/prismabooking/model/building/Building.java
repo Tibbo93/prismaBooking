@@ -12,7 +12,8 @@ import lombok.NoArgsConstructor;
 public class Building {
     private String id;
     private String telephoneNumber;
-    private String emailWiFi;
+    private String email;
+    private boolean flagWiFi;
     private BuildingType buildingType;
     private String street;
     private String city;

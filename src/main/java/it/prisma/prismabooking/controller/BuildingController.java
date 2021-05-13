@@ -73,7 +73,7 @@ public class BuildingController {
     @GetMapping("/buildings/{buildingId}")
     @ResponseStatus(HttpStatus.OK)
     public Building findBuilding(@Parameter(description = "ID of a building") @PathVariable("buildingId") String buildingId) {
-        return buildingService.findBuilding(buildingId);
+        return buildingService.findResource(buildingId);
     }
 
     @Operation(summary = "Update existing building",
