@@ -27,31 +27,11 @@ public class BaseService<T> {
     protected Gson gson;
 
     public PagedRes<T> findPage(Integer offset, Integer limit) {
-        limit = handleLimit(limit);
-        offset = Optional.ofNullable(offset).orElse(0);
-        int start = offset * limit;
-        int end = Math.min(start + limit, list.size());
-
-        List<T> sublist = list.subList(start, end);
-        return PagedRes.<T>builder()
-                .data(sublist)
-                .offset(offset.longValue())
-                .totalElements((long) sublist.size())
-                .build();
+        return createPage(offset, limit, list);
     }
 
     public PagedRes<T> findPage(Integer offset, Integer limit, List<T> content) {
-        limit = handleLimit(limit);
-        offset = Optional.ofNullable(offset).orElse(0);
-        int start = offset * limit;
-        int end = Math.min(start + limit, content.size());
-
-        List<T> sublist = content.subList(start, end);
-        return PagedRes.<T>builder()
-                .data(sublist)
-                .offset(offset.longValue())
-                .totalElements((long) sublist.size())
-                .build();
+        return createPage(offset, limit, content);
     }
 
     public T findResource(String id) {
@@ -71,6 +51,20 @@ public class BaseService<T> {
                         .equals(id))
                 .findFirst()
                 .orElseThrow(() -> new NotFoundException("Resource not found with id: " + id));
+    }
+
+    public PagedRes<T> createPage(Integer offset, Integer limit, List<T> content) {
+        limit = handleLimit(limit);
+        offset = Optional.ofNullable(offset).orElse(0);
+        int start = offset * limit;
+        int end = Math.min(start + limit, content.size());
+
+        List<T> sublist = list.subList(start, end);
+        return PagedRes.<T>builder()
+                .data(sublist)
+                .offset(offset.longValue())
+                .totalElements((long) sublist.size())
+                .build();
     }
 
     public Integer handleLimit(Integer limit) {
