@@ -17,6 +17,7 @@ public class UserService extends BaseService<User> {
     public UserService(ConfigurationComponent configurationComponent) {
         super.config = configurationComponent;
         super.resourceFile = new DefaultResourceLoader().getResource("file:src/main/resources/data/users.json");
+        super.resourceType = "User";
     }
 
     @Autowired

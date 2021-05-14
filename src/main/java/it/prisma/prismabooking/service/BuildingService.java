@@ -7,6 +7,7 @@ import it.prisma.prismabooking.model.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.stereotype.Service;
+
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,7 @@ public class BuildingService extends BaseService<Building> {
     public BuildingService(ConfigurationComponent configurationComponent) {
         super.config = configurationComponent;
         super.resourceFile = new DefaultResourceLoader().getResource("file:src/main/resources/data/buildings.json");
+        super.resourceType = "Building";
     }
 
     @Autowired

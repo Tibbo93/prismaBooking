@@ -19,6 +19,7 @@ public class FacilityService extends BaseService<Facility> {
     public FacilityService(ConfigurationComponent configurationComponent) {
         super.config = configurationComponent;
         super.resourceFile = new DefaultResourceLoader().getResource("file:src/main/resources/data/facilities.json");
+        super.resourceType = "Facility";
     }
 
     @Autowired

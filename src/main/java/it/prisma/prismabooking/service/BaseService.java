@@ -3,17 +3,14 @@ package it.prisma.prismabooking.service;
 import com.google.gson.Gson;
 import it.prisma.prismabooking.component.ConfigurationComponent;
 import it.prisma.prismabooking.model.PagedRes;
-import it.prisma.prismabooking.model.room.Room;
+import it.prisma.prismabooking.utils.InternalServerErrorException;
 import it.prisma.prismabooking.utils.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.ParameterizedType;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
@@ -30,6 +27,7 @@ public class BaseService<T> {
     Resource resourceFile;
     @Autowired
     protected Gson gson;
+    protected String resourceType;
 
     public PagedRes<T> findPage(Integer offset, Integer limit) {
         return createPage(offset, limit, list);
@@ -48,14 +46,14 @@ public class BaseService<T> {
                                 return method.invoke(t);
                             } catch (IllegalAccessException | InvocationTargetException e) {
                                 log.error(e.getMessage());
+                                throw new InternalServerErrorException("Internal server error: " + e.getMessage());
                             }
-                            return "";
                         })
                         .findFirst()
                         .get()
                         .equals(id))
                 .findFirst()
-                .orElseThrow(() -> new NotFoundException("Resource not found with id: " + id));
+                .orElseThrow(() -> new NotFoundException(resourceType + " not found with id: " + id));
     }
 
     public T createResource(T resource) {
@@ -75,6 +73,7 @@ public class BaseService<T> {
             }
         } catch (IllegalAccessException | InvocationTargetException e) {
             log.error(e.getMessage());
+            throw new InternalServerErrorException("Internal server error: " + e.getMessage());
         }
 
         list.add(resource);
@@ -125,6 +124,7 @@ public class BaseService<T> {
             lines.forEach(line -> list.add(gson.fromJson(line, clazz)));
         } catch (IOException e) {
             log.error("Error parsing line with cause: {}", e.getMessage());
+            throw new InternalServerErrorException("Error parsing line with cause: " + e.getMessage());
         }
     }
 
@@ -135,6 +135,7 @@ public class BaseService<T> {
                     StandardOpenOption.APPEND);
         } catch (IOException e) {
             log.error(e.getMessage());
+            throw new InternalServerErrorException("Internal server error: " + e.getMessage());
         }
     }
 
@@ -146,6 +147,7 @@ public class BaseService<T> {
                     StandardOpenOption.TRUNCATE_EXISTING);
         } catch (IOException e) {
             log.error(e.getMessage());
+            throw new InternalServerErrorException("Internal server error: " + e.getMessage());
         }
     }
 }

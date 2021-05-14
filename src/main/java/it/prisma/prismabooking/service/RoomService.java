@@ -15,6 +15,7 @@ public class RoomService extends BaseService<Room> {
     public RoomService(ConfigurationComponent configurationComponent, BuildingService buildingService) {
         super.config = configurationComponent;
         super.resourceFile = new DefaultResourceLoader().getResource("file:src/main/resources/data/rooms.json");
+        super.resourceType = "Room";
         this.buildingService = buildingService;
     }
 
