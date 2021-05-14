@@ -40,6 +40,20 @@ public class BaseService<T> {
                 .build();
     }
 
+    public PagedRes<T> findPage(Integer offset, Integer limit, List<T> content) {
+        limit = handleLimit(limit);
+        offset = Optional.ofNullable(offset).orElse(0);
+        int start = offset * limit;
+        int end = Math.min(start + limit, content.size());
+
+        List<T> sublist = content.subList(start, end);
+        return PagedRes.<T>builder()
+                .data(sublist)
+                .offset(offset.longValue())
+                .totalElements((long) sublist.size())
+                .build();
+    }
+
     public T findResource(String id) {
         return list.stream()
                 .filter(t -> Arrays.stream(t.getClass().getDeclaredMethods())
