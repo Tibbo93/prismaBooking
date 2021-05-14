@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -56,7 +55,7 @@ public class BuildingController {
     public Building createBuilding(@RequestBody Building building) {
         if (building.getId() != null)
             throw new BadRequestException("Cannot POST resource that already have an ID");
-        return buildingService.createBuilding(building);
+        return buildingService.createResource(building);
     }
 
     @Operation(summary = "Find building by ID",
@@ -91,7 +90,7 @@ public class BuildingController {
     @ResponseStatus(HttpStatus.OK)
     public Building updateBuilding(@Parameter(description = "ID of a building") @PathVariable("buildingId") String buildingId,
                                    @RequestBody Building building) {
-        return buildingService.createBuilding(building);
+        return buildingService.createResource(building);
     }
 
     @Operation(summary = "Delete existing building",

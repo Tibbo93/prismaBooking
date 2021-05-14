@@ -5,25 +5,20 @@ import it.prisma.prismabooking.model.Facility;
 import it.prisma.prismabooking.model.PagedRes;
 import it.prisma.prismabooking.model.building.Building;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.stereotype.Service;
-
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class FacilityService extends BaseService<Facility> {
 
-    @Value("file:src/main/resources/data/facilities.json")
-    Resource facilitiesFile;
     BuildingService buildingService;
 
     public FacilityService(ConfigurationComponent configurationComponent) {
         super.config = configurationComponent;
+        super.resourceFile = new DefaultResourceLoader().getResource("file:src/main/resources/data/facilities.json");
     }
 
     @Autowired
@@ -31,26 +26,12 @@ public class FacilityService extends BaseService<Facility> {
         this.buildingService = buildingService;
     }
 
-    public Facility createFacility(Facility facility) {
-        if (!Optional.ofNullable(facility.getId()).isPresent())
-            facility.setId(UUID.randomUUID().toString());
-        else {
-            findResource(facility.getId());
-            deleteFacility(facility.getId());
-        }
-
-        list.add(facility);
-        writeOnJSON(facilitiesFile, facility);
-        return facility;
-    }
-
     public void deleteFacility(String facilityId) {
-        list.remove(findResource(facilityId));
-        deleteFromJSON(facilitiesFile);
+        deleteResource(facilityId);
 
         buildingService.list
                 .forEach(building -> building.getFacilitiesId().remove(facilityId));
-        buildingService.deleteFromJSON(buildingService.buildingsFile);
+        buildingService.deleteFromJSON();
     }
 
     public PagedRes<Facility> findFacilitiesOfBuilding(Integer offset, Integer limit, String buildingId) {
@@ -63,6 +44,6 @@ public class FacilityService extends BaseService<Facility> {
 
     @PostConstruct
     public void init() {
-        loadJSON(facilitiesFile, Facility.class);
+        loadJSON(Facility.class);
     }
 }

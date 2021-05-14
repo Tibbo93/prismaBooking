@@ -5,27 +5,22 @@ import it.prisma.prismabooking.model.PagedRes;
 import it.prisma.prismabooking.model.building.Building;
 import it.prisma.prismabooking.model.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
+import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.stereotype.Service;
-
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 public class BuildingService extends BaseService<Building> {
 
-    @Value("file:src/main/resources/data/buildings.json")
-    Resource buildingsFile;
     UserService userService;
     FacilityService facilityService;
 
     public BuildingService(ConfigurationComponent configurationComponent) {
         super.config = configurationComponent;
+        super.resourceFile = new DefaultResourceLoader().getResource("file:src/main/resources/data/buildings.json");
     }
 
     @Autowired
@@ -38,26 +33,12 @@ public class BuildingService extends BaseService<Building> {
         this.facilityService = facilityService;
     }
 
-    public Building createBuilding(Building building) {
-        if (!Optional.ofNullable(building.getId()).isPresent())
-            building.setId(UUID.randomUUID().toString());
-        else {
-            findResource(building.getId());
-            deleteBuilding(building.getId());
-        }
-
-        list.add(building);
-        writeOnJSON(buildingsFile, building);
-        return building;
-    }
-
     public void deleteBuilding(String buildingId) {
-        list.remove(findResource(buildingId));
-        deleteFromJSON(buildingsFile);
+        deleteResource(buildingId);
 
         userService.list
                 .forEach(user -> user.getBuildingsId().remove(buildingId));
-        userService.deleteFromJSON(userService.usersFile);
+        userService.deleteFromJSON();
     }
 
     public PagedRes<Building> findBuildingsOfUser(Integer offset, Integer limit, String userId) {
@@ -76,7 +57,7 @@ public class BuildingService extends BaseService<Building> {
 
     @PostConstruct
     public void init() {
-        loadJSON(buildingsFile, Building.class);
+        loadJSON(Building.class);
     }
 }
 

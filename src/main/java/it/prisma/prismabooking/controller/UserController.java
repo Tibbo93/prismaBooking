@@ -55,7 +55,7 @@ public class UserController {
     public User createUser(@RequestBody User user) {
         if (user.getId() != null)
             throw new BadRequestException("Cannot POST resource that already have an ID");
-        return userService.createUser(user);
+        return userService.createResource(user);
     }
 
     @Operation(summary = "Find user by ID",
@@ -90,7 +90,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public User updateUser(@Parameter(description = "ID of a user") @PathVariable("userId") String userId,
                            @RequestBody User user) {
-        return userService.createUser(user);
+        return userService.createResource(user);
     }
 
     @Operation(summary = "Delete existing user",
@@ -106,7 +106,7 @@ public class UserController {
     @DeleteMapping("/users/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@Parameter(description = "ID of a user") @PathVariable("userId") String userId) {
-        userService.deleteUser(userId);
+        userService.deleteResource(userId);
     }
 
     @Operation(summary = "Get user list of a specific building")

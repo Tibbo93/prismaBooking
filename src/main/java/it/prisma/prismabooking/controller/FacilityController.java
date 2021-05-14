@@ -55,7 +55,7 @@ public class FacilityController {
     public Facility createFacility(@RequestBody Facility facility) {
         if (facility.getId() != null)
             throw new BadRequestException("Cannot POST resource that already have an ID");
-        return facilityService.createFacility(facility);
+        return facilityService.createResource(facility);
     }
 
     @Operation(summary = "Find facility by ID",
@@ -90,7 +90,7 @@ public class FacilityController {
     @ResponseStatus(HttpStatus.OK)
     public Facility updateFacility(@Parameter(description = "ID of a facility") @PathVariable("facilityId") String facilityId,
                                    @RequestBody Facility facility) {
-        return facilityService.createFacility(facility);
+        return facilityService.createResource(facility);
     }
 
     @Operation(summary = "Delete existing facility",

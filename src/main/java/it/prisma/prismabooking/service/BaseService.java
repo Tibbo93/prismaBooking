@@ -3,14 +3,17 @@ package it.prisma.prismabooking.service;
 import com.google.gson.Gson;
 import it.prisma.prismabooking.component.ConfigurationComponent;
 import it.prisma.prismabooking.model.PagedRes;
+import it.prisma.prismabooking.model.room.Room;
 import it.prisma.prismabooking.utils.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.ParameterizedType;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
@@ -21,8 +24,10 @@ import java.util.stream.Stream;
 @Service
 @Slf4j
 public class BaseService<T> {
+
     protected ConfigurationComponent config;
     protected List<T> list = new ArrayList<>();
+    Resource resourceFile;
     @Autowired
     protected Gson gson;
 
@@ -51,6 +56,35 @@ public class BaseService<T> {
                         .equals(id))
                 .findFirst()
                 .orElseThrow(() -> new NotFoundException("Resource not found with id: " + id));
+    }
+
+    public T createResource(T resource) {
+        try {
+            String id = (String) Arrays.stream(resource.getClass().getDeclaredMethods()).sequential()
+                    .filter(method -> method.getName().equals("getId"))
+                    .findFirst()
+                    .get().invoke(resource);
+            if (!Optional.ofNullable(id).isPresent()) {
+                Arrays.stream(resource.getClass().getDeclaredMethods()).sequential()
+                        .filter(method -> method.getName().equals("setId"))
+                        .findFirst()
+                        .get().invoke(resource, UUID.randomUUID().toString());
+            } else {
+                findResource(id);
+                deleteFromJSON();
+            }
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            log.error(e.getMessage());
+        }
+
+        list.add(resource);
+        writeOnJSON(resource);
+        return resource;
+    }
+
+    public void deleteResource(String resourceId) {
+        list.remove(findResource(resourceId));
+        deleteFromJSON();
     }
 
     public PagedRes<T> createPage(Integer offset, Integer limit, List<T> content) {
@@ -84,7 +118,7 @@ public class BaseService<T> {
                 .orElse(0);
     }
 
-    protected void loadJSON(Resource resourceFile, Class<T> clazz) {
+    protected void loadJSON(Class<T> clazz) {
         if (!resourceFile.exists())
             return;
         try (Stream<String> lines = Files.lines(resourceFile.getFile().toPath())) {
@@ -94,7 +128,7 @@ public class BaseService<T> {
         }
     }
 
-    protected void writeOnJSON(Resource resourceFile, T resource) {
+    protected void writeOnJSON(T resource) {
         try {
             Files.write(resourceFile.getFile().toPath(),
                     gson.toJson(resource).concat(System.lineSeparator()).getBytes(StandardCharsets.UTF_8),
@@ -104,7 +138,7 @@ public class BaseService<T> {
         }
     }
 
-    protected void deleteFromJSON(Resource resourceFile) {
+    protected void deleteFromJSON() {
         try {
             Files.write(resourceFile.getFile().toPath(), list.stream()
                             .map(resource -> gson.toJson(resource))
