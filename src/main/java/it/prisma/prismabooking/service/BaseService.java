@@ -55,7 +55,7 @@ public class BaseService<T> {
 
     public PagedRes<T> createPage(Integer offset, Integer limit, List<T> content) {
         limit = handleLimit(limit);
-        offset = Optional.ofNullable(offset).orElse(0);
+        offset = handleOffset(offset);
         int start = offset * limit;
         int end = Math.min(start + limit, content.size());
 
@@ -69,13 +69,19 @@ public class BaseService<T> {
 
     public Integer handleLimit(Integer limit) {
         limit = Optional.ofNullable(limit)
-                .filter(l -> l <= config.getMaxPageSizeLimit())
+                .filter(l -> l <= config.getMaxPageSizeLimit() && l >= 0)
                 .orElse(config.getDefaultPageSizeLimit());
 
         if (limit > list.size())
             return list.size();
 
         return limit;
+    }
+
+    public Integer handleOffset(Integer offset) {
+        return Optional.ofNullable(offset)
+                .filter(o -> o >= 0)
+                .orElse(0);
     }
 
     protected void loadJSON(Resource resourceFile, Class<T> clazz) {

@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import it.prisma.prismabooking.model.PagedRes;
 import it.prisma.prismabooking.model.building.Building;
-import it.prisma.prismabooking.model.user.User;
 import it.prisma.prismabooking.service.BuildingService;
 import it.prisma.prismabooking.utils.BadRequestException;
 import org.springframework.http.HttpStatus;
@@ -124,10 +123,28 @@ public class BuildingController {
                     content = @Content)
     })
     @GetMapping("/users/{userId}/buildings")
-    public PagedRes<Building> findBuildingsByUser(@Parameter(description = "ID of a user") @PathVariable("userId") String userId,
+    public PagedRes<Building> findBuildingsOfUser(@Parameter(description = "ID of a user") @PathVariable("userId") String userId,
                                               @Parameter(description = "The offset of the first item in the collection to return") @RequestParam Integer offset,
                                               @Parameter(description = "The maximum number of entries to return") @RequestParam Integer limit) {
-        return buildingService.findBuildingsByUser(offset, limit, userId);
+        return buildingService.findBuildingsOfUser(offset, limit, userId);
     }
 
+    @Operation(summary = "Get building list of a specific facility")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = PagedRes.class))}),
+            @ApiResponse(responseCode = "400", description = "Bad request",
+                    content = @Content),
+            @ApiResponse(responseCode = "403", description = "Access is forbidden to the resources",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "Facility not found",
+                    content = @Content)
+    })
+    @GetMapping("/facilities/{facilityId}/buildings")
+    public PagedRes<Building> findBuildingsOfFacility(@Parameter(description = "ID of a facility") @PathVariable("facilityId") String facilityId,
+                                                  @Parameter(description = "The offset of the first item in the collection to return") @RequestParam Integer offset,
+                                                  @Parameter(description = "The maximum number of entries to return") @RequestParam Integer limit) {
+        return buildingService.findBuildingsOfFacility(offset, limit, facilityId);
+    }
 }

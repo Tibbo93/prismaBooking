@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class BuildingService extends BaseService<Building> {
@@ -21,6 +22,7 @@ public class BuildingService extends BaseService<Building> {
     @Value("file:src/main/resources/data/buildings.json")
     Resource buildingsFile;
     UserService userService;
+    FacilityService facilityService;
 
     public BuildingService(ConfigurationComponent configurationComponent) {
         super.config = configurationComponent;
@@ -29,6 +31,11 @@ public class BuildingService extends BaseService<Building> {
     @Autowired
     public void setUserService(UserService userService) {
         this.userService = userService;
+    }
+
+    @Autowired
+    public void setFacilityService(FacilityService facilityService) {
+        this.facilityService = facilityService;
     }
 
     public Building createBuilding(Building building) {
@@ -53,12 +60,18 @@ public class BuildingService extends BaseService<Building> {
         userService.deleteFromJSON(userService.usersFile);
     }
 
-    public PagedRes<Building> findBuildingsByUser(Integer offset, Integer limit, String userId) {
-        List<Building> buildings = new ArrayList<Building>();
+    public PagedRes<Building> findBuildingsOfUser(Integer offset, Integer limit, String userId) {
+        List<Building> buildings = new ArrayList<>();
         User user = userService.findResource(userId);
         user.getBuildingsId()
                 .forEach(buildingId -> buildings.add(findResource(buildingId)));
         return findPage(offset, limit, buildings);
+    }
+
+    public PagedRes<Building> findBuildingsOfFacility(Integer offset, Integer limit, String facilityId) {
+        return findPage(offset, limit, list.stream()
+                .filter(building -> building.getFacilitiesId().contains(facilityId))
+                .collect(Collectors.toList()));
     }
 
     @PostConstruct

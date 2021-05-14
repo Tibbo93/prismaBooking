@@ -108,4 +108,23 @@ public class FacilityController {
     public void deleteFacility(@Parameter(description = "ID of a facility") @PathVariable("facilityId") String facilityId) {
         facilityService.deleteFacility(facilityId);
     }
+
+    @Operation(summary = "Get facility list of a specific building")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = PagedRes.class))}),
+            @ApiResponse(responseCode = "400", description = "Bad request",
+                    content = @Content),
+            @ApiResponse(responseCode = "403", description = "Access is forbidden to the resources",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "Building not found",
+                    content = @Content)
+    })
+    @GetMapping("/buildings/{buildingId}/facilities")
+    public PagedRes<Facility> findFacilitiesOfBuilding(@Parameter(description = "ID of a building") @PathVariable("buildingId") String buildingId,
+                                                      @Parameter(description = "The offset of the first item in the collection to return") @RequestParam Integer offset,
+                                                      @Parameter(description = "The maximum number of entries to return") @RequestParam Integer limit) {
+        return facilityService.findFacilitiesOfBuilding(offset, limit, buildingId);
+    }
 }
