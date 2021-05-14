@@ -1,0 +1,1215 @@
+openapi: 3.0.1
+info:
+  title: PrismaBooking API Documentation
+  version: 1.0.0
+servers:
+- url: http://localhost:8081
+tags:
+- name: buildings
+  description: The Building API
+- name: users
+  description: The User API
+- name: facilities
+  description: The Facility API
+- name: rooms
+  description: The Room API
+paths:
+  /api/v1/users/{userId}:
+    get:
+      tags:
+      - users
+      summary: Find user by ID
+      operationId: findUser
+      parameters:
+      - name: userId
+        in: path
+        description: ID of a user
+        required: true
+        schema:
+          type: string
+      responses:
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "500":
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "400":
+          description: Bad request
+          content: {}
+        "404":
+          description: User not found
+          content: {}
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        "403":
+          description: Access is forbidden to the resource
+    put:
+      tags:
+      - users
+      summary: Update existing user
+      operationId: updateUser
+      parameters:
+      - name: userId
+        in: path
+        description: ID of a user
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: User object that needs to be updated
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "500":
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "400":
+          description: Bad request
+          content: {}
+        "404":
+          description: User not found
+          content: {}
+        "200":
+          description: Success
+        "403":
+          description: Access is forbidden to the resource
+    delete:
+      tags:
+      - users
+      summary: Delete existing user
+      operationId: deleteUser
+      parameters:
+      - name: userId
+        in: path
+        description: ID of a user
+        required: true
+        schema:
+          type: string
+      responses:
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "500":
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "400":
+          description: Bad request
+          content: {}
+        "404":
+          description: User not found
+          content: {}
+        "204":
+          description: No content
+        "403":
+          description: Access is forbidden to the resource
+  /api/v1/facilities/{facilityId}:
+    get:
+      tags:
+      - facilities
+      summary: Find facility by ID
+      operationId: findFacility
+      parameters:
+      - name: facilityId
+        in: path
+        description: ID of a facility
+        required: true
+        schema:
+          type: string
+      responses:
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "500":
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "400":
+          description: Bad request
+          content: {}
+        "404":
+          description: Facility not found
+          content: {}
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Facility'
+        "403":
+          description: Access is forbidden to the resource
+    put:
+      tags:
+      - facilities
+      summary: Update existing facility
+      operationId: updateFacility
+      parameters:
+      - name: facilityId
+        in: path
+        description: ID of a facility
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Facility object that needs to be updated
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Facility'
+        required: true
+      responses:
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "500":
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "400":
+          description: Bad request
+          content: {}
+        "404":
+          description: Facility not found
+          content: {}
+        "200":
+          description: Success
+        "403":
+          description: Access is forbidden to the resource
+    delete:
+      tags:
+      - facilities
+      summary: Delete existing facility
+      operationId: deleteFacility
+      parameters:
+      - name: facilityId
+        in: path
+        description: ID of a facility
+        required: true
+        schema:
+          type: string
+      responses:
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "500":
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "400":
+          description: Bad request
+          content: {}
+        "404":
+          description: Facility not found
+          content: {}
+        "204":
+          description: No content
+        "403":
+          description: Access is forbidden to the resource
+  /api/v1/buildings/{buildingId}:
+    get:
+      tags:
+      - buildings
+      summary: Find building by ID
+      operationId: findBuilding
+      parameters:
+      - name: buildingId
+        in: path
+        description: ID of a building
+        required: true
+        schema:
+          type: string
+      responses:
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "500":
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "400":
+          description: Bad request
+          content: {}
+        "404":
+          description: Building not found
+          content: {}
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Building'
+        "403":
+          description: Access is forbidden to the resource
+    put:
+      tags:
+      - buildings
+      summary: Update existing building
+      operationId: updateBuilding
+      parameters:
+      - name: buildingId
+        in: path
+        description: ID of a building
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Building object that needs to be updated
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Building'
+        required: true
+      responses:
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "500":
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "400":
+          description: Bad request
+          content: {}
+        "404":
+          description: Building not found
+          content: {}
+        "200":
+          description: Success
+        "403":
+          description: Access is forbidden to the resource
+    delete:
+      tags:
+      - buildings
+      summary: Delete existing building
+      operationId: deleteBuilding
+      parameters:
+      - name: buildingId
+        in: path
+        description: ID of a building
+        required: true
+        schema:
+          type: string
+      responses:
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "500":
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "400":
+          description: Bad request
+          content: {}
+        "404":
+          description: Building not found
+          content: {}
+        "204":
+          description: No content
+        "403":
+          description: Access is forbidden to the resource
+  /api/v1/buildings/{buildingId}/rooms/{roomId}:
+    get:
+      tags:
+      - rooms
+      summary: Find room by ID
+      operationId: findRoom
+      parameters:
+      - name: buildingId
+        in: path
+        description: ID of a building
+        required: true
+        schema:
+          type: string
+      - name: roomId
+        in: path
+        description: ID of a room
+        required: true
+        schema:
+          type: string
+      responses:
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "500":
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "400":
+          description: Bad request
+          content: {}
+        "404":
+          description: Room or Building not found
+          content: {}
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Room'
+        "403":
+          description: Access is forbidden to the resource
+    put:
+      tags:
+      - rooms
+      summary: Update existing room
+      operationId: updateRoom
+      parameters:
+      - name: buildingId
+        in: path
+        description: ID of a building
+        required: true
+        schema:
+          type: string
+      - name: roomId
+        in: path
+        description: ID of a room
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Room object that needs to be updated
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Room'
+        required: true
+      responses:
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "500":
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "400":
+          description: Bad request
+          content: {}
+        "404":
+          description: Room or Building not found
+          content: {}
+        "200":
+          description: Success
+        "403":
+          description: Access is forbidden to the resource
+    delete:
+      tags:
+      - rooms
+      summary: Delete existing room
+      operationId: deleteRoom
+      parameters:
+      - name: buildingId
+        in: path
+        description: ID of a building
+        required: true
+        schema:
+          type: string
+      - name: roomId
+        in: path
+        description: ID of a room
+        required: true
+        schema:
+          type: string
+      responses:
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "500":
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "400":
+          description: Bad request
+          content: {}
+        "404":
+          description: Room or Building not found
+          content: {}
+        "204":
+          description: No content
+        "403":
+          description: Access is forbidden to the resource
+  /api/v1/users:
+    get:
+      tags:
+      - users
+      summary: Get user list
+      operationId: findUsers
+      parameters:
+      - name: offset
+        in: query
+        description: The offset of the first item in the collection to return
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: limit
+        in: query
+        description: The maximum number of entries to return
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "500":
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "400":
+          description: Bad request
+          content: {}
+        "404":
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Access is forbidden to the resources
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedRes'
+    post:
+      tags:
+      - users
+      summary: Add new user
+      operationId: createUser
+      requestBody:
+        description: User object that needs to be added
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "500":
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "400":
+          description: Bad request
+          content: {}
+        "404":
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "201":
+          description: Created
+        "405":
+          description: Invalid input
+  /api/v1/facilities:
+    get:
+      tags:
+      - facilities
+      summary: Get facility list
+      operationId: findPage
+      parameters:
+      - name: offset
+        in: query
+        description: The offset of the first item in the collection to return
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: limit
+        in: query
+        description: The maximum number of entries to return
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "500":
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "400":
+          description: Bad request
+          content: {}
+        "404":
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Access is forbidden to the resources
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedRes'
+    post:
+      tags:
+      - facilities
+      summary: Add new facility
+      operationId: createFacility
+      requestBody:
+        description: Facility object that needs to be added
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Facility'
+        required: true
+      responses:
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "500":
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "400":
+          description: Bad request
+          content: {}
+        "404":
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "201":
+          description: Created
+        "405":
+          description: Invalid input
+  /api/v1/buildings:
+    get:
+      tags:
+      - buildings
+      summary: Get building list
+      operationId: findPage_1
+      parameters:
+      - name: offset
+        in: query
+        description: The offset of the first item in the collection to return
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: limit
+        in: query
+        description: The maximum number of entries to return
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "500":
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "400":
+          description: Bad request
+          content: {}
+        "404":
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Access is forbidden to the resources
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedRes'
+    post:
+      tags:
+      - buildings
+      summary: Add new building
+      operationId: createBuilding
+      requestBody:
+        description: Building object that needs to be added
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Building'
+        required: true
+      responses:
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "500":
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "400":
+          description: Bad request
+          content: {}
+        "404":
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "201":
+          description: Created
+        "405":
+          description: Invalid input
+  /api/v1/buildings/{buildingId}/rooms:
+    get:
+      tags:
+      - rooms
+      summary: Get room list
+      operationId: findPage_2
+      parameters:
+      - name: buildingId
+        in: path
+        description: ID of a building
+        required: true
+        schema:
+          type: string
+      - name: offset
+        in: query
+        description: The offset of the first item in the collection to return
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: limit
+        in: query
+        description: The maximum number of entries to return
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "500":
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "400":
+          description: Bad request
+          content: {}
+        "404":
+          description: Building not found
+          content: {}
+        "403":
+          description: Access is forbidden to the resources
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedRes'
+    post:
+      tags:
+      - rooms
+      summary: Add new room
+      operationId: createRoom
+      parameters:
+      - name: buildingId
+        in: path
+        description: ID of a building
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Room object that needs to be added
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Room'
+        required: true
+      responses:
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "500":
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "400":
+          description: Bad request
+          content: {}
+        "404":
+          description: Building not found
+          content: {}
+        "201":
+          description: Created
+        "405":
+          description: Invalid input
+  /api/v1/users/{userId}/buildings:
+    get:
+      tags:
+      - buildings
+      summary: Get building list of a specific user
+      operationId: findBuildingsOfUser
+      parameters:
+      - name: userId
+        in: path
+        description: ID of a user
+        required: true
+        schema:
+          type: string
+      - name: offset
+        in: query
+        description: The offset of the first item in the collection to return
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: limit
+        in: query
+        description: The maximum number of entries to return
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "500":
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "400":
+          description: Bad request
+          content: {}
+        "404":
+          description: User not found
+          content: {}
+        "403":
+          description: Access is forbidden to the resources
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedRes'
+  /api/v1/facilities/{facilityId}/buildings:
+    get:
+      tags:
+      - buildings
+      summary: Get building list of a specific facility
+      operationId: findBuildingsOfFacility
+      parameters:
+      - name: facilityId
+        in: path
+        description: ID of a facility
+        required: true
+        schema:
+          type: string
+      - name: offset
+        in: query
+        description: The offset of the first item in the collection to return
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: limit
+        in: query
+        description: The maximum number of entries to return
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "500":
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "400":
+          description: Bad request
+          content: {}
+        "404":
+          description: Facility not found
+          content: {}
+        "403":
+          description: Access is forbidden to the resources
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedRes'
+  /api/v1/buildings/{buildingId}/users:
+    get:
+      tags:
+      - users
+      summary: Get user list of a specific building
+      operationId: findUsersByBuilding
+      parameters:
+      - name: buildingId
+        in: path
+        description: ID of a building
+        required: true
+        schema:
+          type: string
+      - name: offset
+        in: query
+        description: The offset of the first item in the collection to return
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: limit
+        in: query
+        description: The maximum number of entries to return
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "500":
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "400":
+          description: Bad request
+          content: {}
+        "404":
+          description: Building not found
+          content: {}
+        "403":
+          description: Access is forbidden to the resources
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedRes'
+  /api/v1/buildings/{buildingId}/facilities:
+    get:
+      tags:
+      - facilities
+      summary: Get facility list of a specific building
+      operationId: findFacilitiesOfBuilding
+      parameters:
+      - name: buildingId
+        in: path
+        description: ID of a building
+        required: true
+        schema:
+          type: string
+      - name: offset
+        in: query
+        description: The offset of the first item in the collection to return
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: limit
+        in: query
+        description: The maximum number of entries to return
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "500":
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "400":
+          description: Bad request
+          content: {}
+        "404":
+          description: Building not found
+          content: {}
+        "403":
+          description: Access is forbidden to the resources
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedRes'
+components:
+  schemas:
+    ErrorMessage:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+        timestamp:
+          type: string
+          format: date-time
+        message:
+          type: string
+        description:
+          type: string
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        role:
+          type: string
+          enum:
+          - AMMINISTRATORE
+          - MANAGER
+          - CLIENTE
+          - RECEPTIONIST
+        email:
+          type: string
+        telephoneNumber:
+          type: string
+        buildingsId:
+          type: array
+          items:
+            type: string
+    Facility:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        price:
+          type: number
+          format: double
+        flagLuxury:
+          type: boolean
+    Building:
+      type: object
+      properties:
+        id:
+          type: string
+        telephoneNumber:
+          type: string
+        email:
+          type: string
+        flagWiFi:
+          type: boolean
+        buildingType:
+          type: string
+          enum:
+          - SPA
+          - HOTEL
+          - RESORT
+          - BED_AND_BREAKFAST
+          - AFFITTACAMERE
+        street:
+          type: string
+        city:
+          type: string
+        country:
+          type: string
+        facilitiesId:
+          type: array
+          items:
+            type: string
+    Room:
+      type: object
+      properties:
+        id:
+          type: string
+        size:
+          type: number
+          format: double
+        priceLowSeason:
+          type: number
+          format: double
+        priceMidSeason:
+          type: number
+          format: double
+        priceHighSeason:
+          type: number
+          format: double
+        flagBalcony:
+          type: boolean
+        flagShower:
+          type: boolean
+        flagWhirlpool:
+          type: boolean
+        category:
+          type: string
+          enum:
+          - ECONOMY
+          - FAMILY
+          - JUNIOR_SUITE
+          - DELUXE_SUITE
+        singleBeds:
+          type: integer
+          format: int32
+        queenSizeBeds:
+          type: integer
+          format: int32
+        bathrooms:
+          type: integer
+          format: int32
+        buildingId:
+          type: string
+    PagedRes:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+        offset:
+          type: integer
+          format: int64
+        totalElements:
+          type: integer
+          format: int64
