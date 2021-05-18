@@ -36,30 +36,27 @@ public class BuildingService extends BaseService<Building> {
     }
 
     public void deleteBuilding(String buildingId) {
-        deleteResource(buildingId);
+        /*deleteResource(buildingId);
 
         userService.list
                 .forEach(user -> user.getBuildingsId().remove(buildingId));
-        userService.deleteFromJSON();
+        userService.deleteFromJSON();*/
     }
 
     public PagedRes<Building> findBuildingsOfUser(Integer offset, Integer limit, String userId) {
-        List<Building> buildings = new ArrayList<>();
+        return null;
+        /*List<Building> buildings = new ArrayList<>();
         User user = userService.findResource(userId);
         user.getBuildingsId()
                 .forEach(buildingId -> buildings.add(findResource(buildingId)));
-        return findPage(offset, limit, buildings);
+        return findPage(offset, limit, buildings);*/
     }
 
     public PagedRes<Building> findBuildingsOfFacility(Integer offset, Integer limit, String facilityId) {
-        return findPage(offset, limit, list.stream()
+        return null;
+        /*return findPage(offset, limit, list.stream()
                 .filter(building -> building.getFacilitiesId().contains(facilityId))
-                .collect(Collectors.toList()));
-    }
-
-    @PostConstruct
-    public void init() {
-        loadJSON(Building.class);
+                .collect(Collectors.toList()));*/
     }
 }
 

@@ -62,8 +62,8 @@ public class RoomController {
                            @RequestBody Room room) {
         if (room.getId() != null)
             throw new BadRequestException("Cannot POST resource that already have an ID");
-        if (room.getBuildingId() != null)
-            throw new BadRequestException("Cannot POST resource that already have a building ID");
+        //if (room.getBuildingId() != null)
+          //  throw new BadRequestException("Cannot POST resource that already have a building ID");
         return roomService.createRoom(room, buildingId);
     }
 

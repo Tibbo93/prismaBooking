@@ -38,9 +38,4 @@ public class RoomService extends BaseService<Room> {
         buildingService.findResource(buildingId);
         deleteResource(roomId);
     }
-
-    @PostConstruct
-    public void init() {
-        loadJSON(Room.class);
-    }
 }

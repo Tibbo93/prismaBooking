@@ -28,23 +28,19 @@ public class FacilityService extends BaseService<Facility> {
     }
 
     public void deleteFacility(String facilityId) {
-        deleteResource(facilityId);
+        /*deleteResource(facilityId);
 
         buildingService.list
                 .forEach(building -> building.getFacilitiesId().remove(facilityId));
-        buildingService.deleteFromJSON();
+        buildingService.deleteFromJSON();*/
     }
 
     public PagedRes<Facility> findFacilitiesOfBuilding(Integer offset, Integer limit, String buildingId) {
-        List<Facility> facilities = new ArrayList<>();
+        return null;
+        /*List<Facility> facilities = new ArrayList<>();
         Building b = buildingService.findResource(buildingId);
         b.getFacilitiesId()
                 .forEach(facilityId -> facilities.add(findResource(facilityId)));
-        return findPage(offset, limit, facilities);
-    }
-
-    @PostConstruct
-    public void init() {
-        loadJSON(Facility.class);
+        return findPage(offset, limit, facilities);*/
     }
 }

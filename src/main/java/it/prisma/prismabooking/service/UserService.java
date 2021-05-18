@@ -26,13 +26,9 @@ public class UserService extends BaseService<User> {
     }
 
     public PagedRes<User> findUsersByBuilding(Integer offset, Integer limit, String buildingId) {
-        return findPage(offset, limit, list.stream()
+        return null;
+        /*return findPage(offset, limit, list.stream()
                 .filter(user -> user.getBuildingsId().contains(buildingId))
-                .collect(Collectors.toList()));
-    }
-
-    @PostConstruct
-    public void init() {
-        loadJSON(User.class);
+                .collect(Collectors.toList()));*/
     }
 }
