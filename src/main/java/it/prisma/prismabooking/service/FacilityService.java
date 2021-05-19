@@ -1,15 +1,11 @@
 package it.prisma.prismabooking.service;
 
 import it.prisma.prismabooking.component.ConfigurationComponent;
-import it.prisma.prismabooking.model.Facility;
+import it.prisma.prismabooking.model.facility.Facility;
 import it.prisma.prismabooking.model.PagedRes;
-import it.prisma.prismabooking.model.building.Building;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.stereotype.Service;
-import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class FacilityService extends BaseService<Facility> {

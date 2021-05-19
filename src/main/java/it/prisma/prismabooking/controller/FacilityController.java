@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import it.prisma.prismabooking.model.Facility;
+import it.prisma.prismabooking.model.facility.Facility;
 import it.prisma.prismabooking.model.PagedRes;
 import it.prisma.prismabooking.service.FacilityService;
 import it.prisma.prismabooking.utils.BadRequestException;

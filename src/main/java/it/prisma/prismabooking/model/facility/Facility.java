@@ -1,4 +1,4 @@
-package it.prisma.prismabooking.model;
+package it.prisma.prismabooking.model.facility;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;

@@ -1,9 +1,8 @@
 package it.prisma.prismabooking.model.building;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import it.prisma.prismabooking.model.Facility;
+import it.prisma.prismabooking.model.facility.Facility;
 import it.prisma.prismabooking.model.room.Room;
 import it.prisma.prismabooking.model.user.User;
 import it.prisma.prismabooking.utils.RoomListSerializer;
