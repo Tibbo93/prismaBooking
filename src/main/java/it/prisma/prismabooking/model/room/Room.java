@@ -1,6 +1,7 @@
 package it.prisma.prismabooking.model.room;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import it.prisma.prismabooking.model.building.Building;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -57,6 +58,5 @@ public class Room {
 
     @ManyToOne
     @JoinColumn(name = "building_id", referencedColumnName = "id")
-    @JsonBackReference
     private Building building;
 }

@@ -1,6 +1,7 @@
 package it.prisma.prismabooking.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import it.prisma.prismabooking.model.building.Building;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,6 +21,7 @@ import java.util.Set;
 @Builder
 public class Facility {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
 
@@ -33,6 +35,5 @@ public class Facility {
     private boolean flagLuxury;
 
     @ManyToMany(mappedBy = "facilities")
-    @JsonBackReference
     private Set<Building> buildings = new HashSet<>();
 }

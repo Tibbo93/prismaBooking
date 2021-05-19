@@ -1,6 +1,8 @@
 package it.prisma.prismabooking.model.user;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import it.prisma.prismabooking.model.building.Building;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,6 +41,5 @@ public class User {
     private String telephoneNumber;
 
     @ManyToMany(mappedBy = "users")
-    @JsonBackReference
     private Set<Building> buildings = new HashSet<>();
 }

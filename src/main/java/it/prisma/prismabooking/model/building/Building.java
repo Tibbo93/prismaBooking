@@ -1,9 +1,12 @@
 package it.prisma.prismabooking.model.building;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import it.prisma.prismabooking.model.Facility;
 import it.prisma.prismabooking.model.room.Room;
 import it.prisma.prismabooking.model.user.User;
+import it.prisma.prismabooking.utils.RoomListSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,6 +26,7 @@ import java.util.Set;
 @Builder
 public class Building {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
 
@@ -49,7 +53,7 @@ public class Building {
     private String country;
 
     @OneToMany(mappedBy = "building", fetch = FetchType.LAZY)
-    @JsonManagedReference
+    @JsonSerialize(using = RoomListSerializer.class)
     private List<Room> rooms = new ArrayList<>();
 
     @ManyToMany
@@ -58,7 +62,7 @@ public class Building {
             joinColumns = {@JoinColumn(name = "building_id")},
             inverseJoinColumns = {@JoinColumn(name = "user_id")}
     )
-    @JsonManagedReference
+    @JsonIgnore
     private Set<User> users = new HashSet<>();
 
     @ManyToMany
@@ -67,6 +71,6 @@ public class Building {
             joinColumns = {@JoinColumn(name = "building_id")},
             inverseJoinColumns = {@JoinColumn(name = "service_id")}
     )
-    @JsonManagedReference
+    @JsonIgnore
     private Set<Facility> facilities = new HashSet<>();
 }
