@@ -1,16 +1,14 @@
 package it.prisma.prismabooking.model.facility;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import it.prisma.prismabooking.model.building.Building;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -32,8 +30,9 @@ public class Facility {
     private BigDecimal price;
 
     @Column(name = "flag_luxury")
-    private boolean flagLuxury;
+    private Boolean flagLuxury;
 
+    @EqualsAndHashCode.Exclude
     @ManyToMany(mappedBy = "facilities")
     private Set<Building> buildings = new HashSet<>();
 }

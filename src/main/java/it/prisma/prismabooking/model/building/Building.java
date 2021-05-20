@@ -5,11 +5,9 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import it.prisma.prismabooking.model.facility.Facility;
 import it.prisma.prismabooking.model.room.Room;
 import it.prisma.prismabooking.model.user.User;
+import it.prisma.prismabooking.utils.FacilitySetSerializer;
 import it.prisma.prismabooking.utils.RoomListSerializer;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -55,6 +53,7 @@ public class Building {
     @JsonSerialize(using = RoomListSerializer.class)
     private List<Room> rooms = new ArrayList<>();
 
+    @EqualsAndHashCode.Exclude
     @ManyToMany
     @JoinTable(
             name = "works",
@@ -64,12 +63,14 @@ public class Building {
     @JsonIgnore
     private Set<User> users = new HashSet<>();
 
+    @EqualsAndHashCode.Exclude
     @ManyToMany
     @JoinTable(
             name = "offers",
             joinColumns = {@JoinColumn(name = "building_id")},
             inverseJoinColumns = {@JoinColumn(name = "service_id")}
     )
-    @JsonIgnore
+    //@JsonIgnore
+    @JsonSerialize(using = FacilitySetSerializer.class)
     private Set<Facility> facilities = new HashSet<>();
 }

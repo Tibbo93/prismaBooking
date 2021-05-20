@@ -9,8 +9,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import it.prisma.prismabooking.model.facility.Facility;
 import it.prisma.prismabooking.model.PagedRes;
+import it.prisma.prismabooking.model.facility.FacilityDTO;
 import it.prisma.prismabooking.service.FacilityService;
 import it.prisma.prismabooking.utils.BadRequestException;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +23,8 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "facilities", description = "The Facility API")
 public class FacilityController {
 
+    @Autowired
+    ModelMapper modelMapper;
     final FacilityService facilityService;
 
     public FacilityController(FacilityService facilityService) {
@@ -29,16 +35,17 @@ public class FacilityController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = PagedRes.class))}),
+                            schema = @Schema(implementation = Page.class))}),
             @ApiResponse(responseCode = "400", description = "Bad request",
                     content = @Content),
             @ApiResponse(responseCode = "403", description = "Access is forbidden to the resources",
                     content = @Content)})
     @GetMapping("/facilities")
     @ResponseStatus(HttpStatus.OK)
-    public PagedRes<Facility> findPage(@Parameter(description = "The offset of the first item in the collection to return") @RequestParam Integer offset,
-                                       @Parameter(description = "The maximum number of entries to return") @RequestParam Integer limit) {
-        return facilityService.findPage(offset, limit);
+    public Page<FacilityDTO> findPage(@Parameter(description = "The offset of the first item in the collection to return") @RequestParam Integer offset,
+                                      @Parameter(description = "The maximum number of entries to return") @RequestParam Integer limit) {
+        Page<Facility> page = facilityService.findPage2(offset, limit);
+        return page.map(this::convertToDTO);
     }
 
     @Operation(summary = "Add new facility",
@@ -52,10 +59,11 @@ public class FacilityController {
                             content = @Content)})
     @PostMapping("/facilities")
     @ResponseStatus(HttpStatus.CREATED)
-    public Facility createFacility(@RequestBody Facility facility) {
-        if (facility.getId() != null)
+    public FacilityDTO createFacility(@RequestBody FacilityDTO facilityDTO) {
+        if (facilityDTO.getId() != null)
             throw new BadRequestException("Cannot POST resource that already have an ID");
-        return facilityService.createResource(facility);
+        Facility facility = convertToEntity(facilityDTO);
+        return convertToDTO(facilityService.createFacility(facility));
     }
 
     @Operation(summary = "Find facility by ID",
@@ -71,8 +79,8 @@ public class FacilityController {
                             content = @Content)})
     @GetMapping("/facilities/{facilityId}")
     @ResponseStatus(HttpStatus.OK)
-    public Facility findFacility(@Parameter(description = "ID of a facility") @PathVariable("facilityId") String facilityId) {
-        return facilityService.findResource(facilityId);
+    public FacilityDTO findFacility(@Parameter(description = "ID of a facility") @PathVariable("facilityId") Integer facilityId) {
+        return convertToDTO(facilityService.findFacility(facilityId));
     }
 
     @Operation(summary = "Update existing facility",
@@ -88,9 +96,10 @@ public class FacilityController {
                             content = @Content)})
     @PutMapping("/facilities/{facilityId}")
     @ResponseStatus(HttpStatus.OK)
-    public Facility updateFacility(@Parameter(description = "ID of a facility") @PathVariable("facilityId") String facilityId,
-                                   @RequestBody Facility facility) {
-        return facilityService.createResource(facility);
+    public FacilityDTO updateFacility(@Parameter(description = "ID of a facility") @PathVariable("facilityId") Integer facilityId,
+                                      @RequestBody FacilityDTO facilityDTO) {
+        Facility facility = convertToEntity(facilityDTO);
+        return convertToDTO(facilityService.updateFacility(facility));
     }
 
     @Operation(summary = "Delete existing facility",
@@ -105,7 +114,7 @@ public class FacilityController {
                             content = @Content)})
     @DeleteMapping("/facilities/{facilityId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteFacility(@Parameter(description = "ID of a facility") @PathVariable("facilityId") String facilityId) {
+    public void deleteFacility(@Parameter(description = "ID of a facility") @PathVariable("facilityId") Integer facilityId) {
         facilityService.deleteFacility(facilityId);
     }
 
@@ -122,9 +131,17 @@ public class FacilityController {
                     content = @Content)
     })
     @GetMapping("/buildings/{buildingId}/facilities")
-    public PagedRes<Facility> findFacilitiesOfBuilding(@Parameter(description = "ID of a building") @PathVariable("buildingId") String buildingId,
-                                                      @Parameter(description = "The offset of the first item in the collection to return") @RequestParam Integer offset,
-                                                      @Parameter(description = "The maximum number of entries to return") @RequestParam Integer limit) {
+    public Page<Facility> findFacilitiesOfBuilding(@Parameter(description = "ID of a building") @PathVariable("buildingId") Integer buildingId,
+                                                       @Parameter(description = "The offset of the first item in the collection to return") @RequestParam Integer offset,
+                                                       @Parameter(description = "The maximum number of entries to return") @RequestParam Integer limit) {
         return facilityService.findFacilitiesOfBuilding(offset, limit, buildingId);
+    }
+
+    private Facility convertToEntity(FacilityDTO facilityDTO) {
+        return modelMapper.map(facilityDTO, Facility.class);
+    }
+
+    private FacilityDTO convertToDTO(Facility facility) {
+        return modelMapper.map(facility, FacilityDTO.class);
     }
 }
