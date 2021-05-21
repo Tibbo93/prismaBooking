@@ -17,9 +17,9 @@ public class RoomDTO {
     private BigDecimal priceLowSeason;
     private BigDecimal priceMidSeason;
     private BigDecimal priceHighSeason;
-    private boolean flagBalcony;
-    private boolean flagShower;
-    private boolean flagWhirlpool;
+    private Boolean flagBalcony;
+    private Boolean flagShower;
+    private Boolean flagWhirlpool;
     private RoomType category;
     private BigDecimal singleBeds;
     private BigDecimal queenSizeBeds;

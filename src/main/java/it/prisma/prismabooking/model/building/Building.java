@@ -49,10 +49,13 @@ public class Building {
     @Column(name = "country")
     private String country;
 
-    @OneToMany(mappedBy = "building", fetch = FetchType.LAZY)
-    @JsonSerialize(using = RoomListSerializer.class)
+    @ToString.Exclude
+    @OneToMany(mappedBy = "building", cascade = CascadeType.ALL)
+    @JsonIgnore
+    //@JsonSerialize(using = RoomListSerializer.class)
     private List<Room> rooms = new ArrayList<>();
 
+    @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @ManyToMany
     @JoinTable(
@@ -63,6 +66,7 @@ public class Building {
     @JsonIgnore
     private Set<User> users = new HashSet<>();
 
+    @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @ManyToMany
     @JoinTable(
@@ -70,7 +74,7 @@ public class Building {
             joinColumns = {@JoinColumn(name = "building_id")},
             inverseJoinColumns = {@JoinColumn(name = "service_id")}
     )
-    //@JsonIgnore
-    @JsonSerialize(using = FacilitySetSerializer.class)
+    @JsonIgnore
+    //@JsonSerialize(using = FacilitySetSerializer.class)
     private Set<Facility> facilities = new HashSet<>();
 }

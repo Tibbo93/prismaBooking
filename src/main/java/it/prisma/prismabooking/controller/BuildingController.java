@@ -31,7 +31,7 @@ public class BuildingController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = PagedRes.class))}),
+                            schema = @Schema(implementation = Page.class))}),
             @ApiResponse(responseCode = "400", description = "Bad request",
                     content = @Content),
             @ApiResponse(responseCode = "403", description = "Access is forbidden to the resources",
@@ -90,9 +90,9 @@ public class BuildingController {
                             content = @Content)})
     @PutMapping("/buildings/{buildingId}")
     @ResponseStatus(HttpStatus.OK)
-    public Building updateBuilding(@Parameter(description = "ID of a building") @PathVariable("buildingId") String buildingId,
+    public Building updateBuilding(@Parameter(description = "ID of a building") @PathVariable("buildingId") Integer buildingId,
                                    @RequestBody BuildingDTO buildingDTO) {
-        return buildingService.updateBuilding(buildingDTO);
+        return buildingService.updateBuilding(buildingDTO, buildingId);
     }
 
     @Operation(summary = "Delete existing building",

@@ -32,6 +32,7 @@ public class Facility {
     @Column(name = "flag_luxury")
     private Boolean flagLuxury;
 
+    @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @ManyToMany(mappedBy = "facilities")
     private Set<Building> buildings = new HashSet<>();

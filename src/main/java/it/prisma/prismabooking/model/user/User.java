@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import it.prisma.prismabooking.model.building.Building;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -40,6 +37,7 @@ public class User {
     @Column(name = "telephone_number")
     private String telephoneNumber;
 
+    @ToString.Exclude
     @ManyToMany(mappedBy = "users")
     private Set<Building> buildings = new HashSet<>();
 }

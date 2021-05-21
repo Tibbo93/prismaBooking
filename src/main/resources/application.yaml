@@ -2,7 +2,7 @@ spring:
   datasource:
     url: jdbc:mysql://127.0.0.1:3306/prismabooking
     username: root
-    password: At250893
+    password: root
   jpa:
     hibernate:
       ddl-auto: validate

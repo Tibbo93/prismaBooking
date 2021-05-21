@@ -1,13 +1,9 @@
 package it.prisma.prismabooking.model.room;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import it.prisma.prismabooking.model.building.Building;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
+import it.prisma.prismabooking.utils.BuildingSerializer;
+import lombok.*;
 import javax.persistence.*;
 import java.math.BigDecimal;
 
@@ -18,11 +14,11 @@ import java.math.BigDecimal;
 @Data
 @Builder
 public class Room {
+
     @Id
-    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "size")
     private BigDecimal size;
 
     @Column(name = "p_low_s")
@@ -35,16 +31,16 @@ public class Room {
     private BigDecimal priceHighSeason;
 
     @Column(name = "flag_balcony")
-    private boolean flagBalcony;
+    private Boolean flagBalcony;
 
     @Column(name = "flag_shower")
-    private boolean flagShower;
+    private Boolean flagShower;
 
     @Column(name = "flag_whirlpool")
-    private boolean flagWhirlpool;
+    private Boolean flagWhirlpool;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "category", columnDefinition ="ENUM('economy', 'family', 'junior_suite', 'deluxe_suite')", nullable = false )
+    @Column(columnDefinition = "ENUM('economy', 'family', 'junior_suite', 'deluxe_suite')", nullable = false)
     private RoomType category;
 
     @Column(name = "n_single_beds")
@@ -56,7 +52,9 @@ public class Room {
     @Column(name = "n_bathrooms")
     private BigDecimal bathrooms;
 
-    @ManyToOne
+    @ToString.Exclude
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "building_id", referencedColumnName = "id")
+    @JsonSerialize(using = BuildingSerializer.class)
     private Building building;
 }

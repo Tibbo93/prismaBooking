@@ -56,8 +56,8 @@ public class BuildingService extends BaseService<Building>{
         buildingRepository.deleteById(buildingId);
     }
 
-    public Building updateBuilding(BuildingDTO buildingDTO) {
-        Building buildingEntity = buildingRepository.findById(buildingDTO.getId())
+    public Building updateBuilding(BuildingDTO buildingDTO, Integer buildingId) {
+        Building buildingEntity = buildingRepository.findById(buildingId)
                 .orElseThrow(() -> new NotFoundException("Building not found with id: " + buildingDTO.getId()));
 
         BuildingMapper.INSTANCE.updateBuildingFromDTO(buildingDTO, buildingEntity);
