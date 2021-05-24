@@ -1,9 +1,10 @@
-package it.prisma.prismabooking.utils;
+package it.prisma.prismabooking.utils.serializer;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import it.prisma.prismabooking.model.facility.Facility;
+import it.prisma.prismabooking.utils.exceptions.InternalServerErrorException;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -11,7 +12,7 @@ import java.util.Set;
 
 public class FacilitySetSerializer extends StdSerializer<Set<Facility>> {
 
-    public FacilitySetSerializer() {
+      FacilitySetSerializer() {
         this(null);
     }
 

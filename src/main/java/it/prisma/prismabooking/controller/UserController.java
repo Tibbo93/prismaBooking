@@ -7,10 +7,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import it.prisma.prismabooking.model.PagedRes;
 import it.prisma.prismabooking.model.user.User;
 import it.prisma.prismabooking.service.UserService;
-import it.prisma.prismabooking.utils.BadRequestException;
+import it.prisma.prismabooking.utils.exceptions.BadRequestException;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,15 +29,15 @@ public class UserController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = PagedRes.class))}),
+                            schema = @Schema(implementation = Page.class))}),
             @ApiResponse(responseCode = "400", description = "Bad request",
                     content = @Content),
             @ApiResponse(responseCode = "403", description = "Access is forbidden to the resources",
                     content = @Content)})
     @GetMapping("/users")
     @ResponseStatus(HttpStatus.OK)
-    public PagedRes<User> findUsers(@Parameter(description = "The offset of the first item in the collection to return") @RequestParam Integer offset,
-                                    @Parameter(description = "The maximum number of entries to return") @RequestParam Integer limit) {
+    public Page<User> findUsers(@Parameter(description = "The offset of the first item in the collection to return") @RequestParam Integer offset,
+                                @Parameter(description = "The maximum number of entries to return") @RequestParam Integer limit) {
         return userService.findPage(offset, limit);
     }
 
@@ -55,7 +55,7 @@ public class UserController {
     public User createUser(@RequestBody User user) {
         if (user.getId() != null)
             throw new BadRequestException("Cannot POST resource that already have an ID");
-        return userService.createResource(user);
+        return userService.createUser(user);
     }
 
     @Operation(summary = "Find user by ID",
@@ -71,8 +71,8 @@ public class UserController {
                             content = @Content)})
     @GetMapping("/users/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public User findUser(@Parameter(description = "ID of a user") @PathVariable("userId") String userId) {
-        return userService.findResource(userId);
+    public User findUser(@Parameter(description = "ID of a user") @PathVariable("userId") Integer userId) {
+        return userService.findUser(userId);
     }
 
     @Operation(summary = "Update existing user",
@@ -88,9 +88,9 @@ public class UserController {
                             content = @Content)})
     @PutMapping("/users/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public User updateUser(@Parameter(description = "ID of a user") @PathVariable("userId") String userId,
+    public User updateUser(@Parameter(description = "ID of a user") @PathVariable("userId") Integer userId,
                            @RequestBody User user) {
-        return userService.createResource(user);
+        return userService.updateUser(user, userId);
     }
 
     @Operation(summary = "Delete existing user",
@@ -105,15 +105,15 @@ public class UserController {
                             content = @Content)})
     @DeleteMapping("/users/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUser(@Parameter(description = "ID of a user") @PathVariable("userId") String userId) {
-        userService.deleteResource(userId);
+    public void deleteUser(@Parameter(description = "ID of a user") @PathVariable("userId") Integer userId) {
+        userService.deleteUser(userId);
     }
 
     @Operation(summary = "Get user list of a specific building")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = PagedRes.class))}),
+                            schema = @Schema(implementation = Page.class))}),
             @ApiResponse(responseCode = "400", description = "Bad request",
                     content = @Content),
             @ApiResponse(responseCode = "403", description = "Access is forbidden to the resources",
@@ -122,9 +122,9 @@ public class UserController {
                     content = @Content)
     })
     @GetMapping("/buildings/{buildingId}/users")
-    public PagedRes<User> findUsersByBuilding(@Parameter(description = "ID of a building") @PathVariable("buildingId") String buildingId,
-                                                  @Parameter(description = "The offset of the first item in the collection to return") @RequestParam Integer offset,
-                                                  @Parameter(description = "The maximum number of entries to return") @RequestParam Integer limit) {
+    public Page<User> findUsersByBuilding(@Parameter(description = "ID of a building") @PathVariable("buildingId") Integer buildingId,
+                                          @Parameter(description = "The offset of the first item in the collection to return") @RequestParam Integer offset,
+                                          @Parameter(description = "The maximum number of entries to return") @RequestParam Integer limit) {
         return userService.findUsersByBuilding(offset, limit, buildingId);
     }
 }

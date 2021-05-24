@@ -1,14 +1,16 @@
 package it.prisma.prismabooking.model.room;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import it.prisma.prismabooking.model.building.Building;
-import it.prisma.prismabooking.utils.BuildingSerializer;
 import lombok.*;
 import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "room")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = Room.class)
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -55,6 +57,6 @@ public class Room {
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "building_id", referencedColumnName = "id")
-    @JsonSerialize(using = BuildingSerializer.class)
+    @JsonIdentityReference(alwaysAsId = true)
     private Building building;
 }

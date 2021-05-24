@@ -11,7 +11,7 @@ import it.prisma.prismabooking.model.facility.Facility;
 import it.prisma.prismabooking.model.PagedRes;
 import it.prisma.prismabooking.model.facility.FacilityDTO;
 import it.prisma.prismabooking.service.FacilityService;
-import it.prisma.prismabooking.utils.BadRequestException;
+import it.prisma.prismabooking.utils.exceptions.BadRequestException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

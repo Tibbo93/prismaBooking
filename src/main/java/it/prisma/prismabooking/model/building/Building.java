@@ -1,12 +1,9 @@
 package it.prisma.prismabooking.model.building;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.annotation.*;
 import it.prisma.prismabooking.model.facility.Facility;
 import it.prisma.prismabooking.model.room.Room;
 import it.prisma.prismabooking.model.user.User;
-import it.prisma.prismabooking.utils.FacilitySetSerializer;
-import it.prisma.prismabooking.utils.RoomListSerializer;
 import lombok.*;
 
 import javax.persistence.*;
@@ -17,20 +14,18 @@ import java.util.Set;
 
 @Entity
 @Table(name = "building")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = Building.class)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class Building {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Integer id;
 
     @Column(name = "telephone_number")
     private String telephoneNumber;
 
-    @Column(name = "email")
     private String email;
 
     @Column(name = "flag_wifi")
@@ -40,33 +35,26 @@ public class Building {
     @Column(name = "category", columnDefinition = "ENUM('economy', 'family', 'junior_suite', 'deluxe_suite')", nullable = false)
     private BuildingType buildingType;
 
-    @Column(name = "street")
     private String street;
 
-    @Column(name = "city")
     private String city;
 
-    @Column(name = "country")
     private String country;
 
-    @ToString.Exclude
     @OneToMany(mappedBy = "building", cascade = CascadeType.ALL)
-    @JsonIgnore
-    //@JsonSerialize(using = RoomListSerializer.class)
+    @JsonIdentityReference(alwaysAsId = true)
     private List<Room> rooms = new ArrayList<>();
 
-    @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "works",
             joinColumns = {@JoinColumn(name = "building_id")},
             inverseJoinColumns = {@JoinColumn(name = "user_id")}
     )
-    @JsonIgnore
+    @JsonBackReference
     private Set<User> users = new HashSet<>();
 
-    @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @ManyToMany
     @JoinTable(
@@ -74,7 +62,6 @@ public class Building {
             joinColumns = {@JoinColumn(name = "building_id")},
             inverseJoinColumns = {@JoinColumn(name = "service_id")}
     )
-    @JsonIgnore
-    //@JsonSerialize(using = FacilitySetSerializer.class)
+    @JsonBackReference
     private Set<Facility> facilities = new HashSet<>();
 }

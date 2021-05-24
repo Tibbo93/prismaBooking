@@ -13,6 +13,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "service")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = Facility.class)
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -32,8 +33,9 @@ public class Facility {
     @Column(name = "flag_luxury")
     private Boolean flagLuxury;
 
-    @ToString.Exclude
+    //@ToString.Exclude
     @EqualsAndHashCode.Exclude
     @ManyToMany(mappedBy = "facilities")
+    @JsonIdentityReference(alwaysAsId = true)
     private Set<Building> buildings = new HashSet<>();
 }

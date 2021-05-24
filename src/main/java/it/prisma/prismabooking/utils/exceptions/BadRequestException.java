@@ -1,4 +1,4 @@
-package it.prisma.prismabooking.utils;
+package it.prisma.prismabooking.utils.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

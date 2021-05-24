@@ -1,4 +1,4 @@
-package it.prisma.prismabooking.utils;
+package it.prisma.prismabooking.utils.deserializer;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;

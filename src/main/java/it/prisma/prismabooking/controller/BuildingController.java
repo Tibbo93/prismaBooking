@@ -11,7 +11,7 @@ import it.prisma.prismabooking.model.PagedRes;
 import it.prisma.prismabooking.model.building.Building;
 import it.prisma.prismabooking.model.building.BuildingDTO;
 import it.prisma.prismabooking.service.BuildingService;
-import it.prisma.prismabooking.utils.BadRequestException;
+import it.prisma.prismabooking.utils.exceptions.BadRequestException;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -125,8 +125,8 @@ public class BuildingController {
     })
     @GetMapping("/users/{userId}/buildings")
     public PagedRes<Building> findBuildingsOfUser(@Parameter(description = "ID of a user") @PathVariable("userId") String userId,
-                                              @Parameter(description = "The offset of the first item in the collection to return") @RequestParam Integer offset,
-                                              @Parameter(description = "The maximum number of entries to return") @RequestParam Integer limit) {
+                                                  @Parameter(description = "The offset of the first item in the collection to return") @RequestParam Integer offset,
+                                                  @Parameter(description = "The maximum number of entries to return") @RequestParam Integer limit) {
         return buildingService.findBuildingsOfUser(offset, limit, userId);
     }
 

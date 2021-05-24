@@ -1,10 +1,10 @@
 package it.prisma.prismabooking.component;
 
 import it.prisma.prismabooking.model.ErrorMessage;
-import it.prisma.prismabooking.utils.BadRequestException;
-import it.prisma.prismabooking.utils.ConflictException;
-import it.prisma.prismabooking.utils.NotFoundException;
-import it.prisma.prismabooking.utils.InternalServerErrorException;
+import it.prisma.prismabooking.utils.exceptions.BadRequestException;
+import it.prisma.prismabooking.utils.exceptions.ConflictException;
+import it.prisma.prismabooking.utils.exceptions.NotFoundException;
+import it.prisma.prismabooking.utils.exceptions.InternalServerErrorException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;

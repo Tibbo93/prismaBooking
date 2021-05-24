@@ -10,7 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import it.prisma.prismabooking.model.room.Room;
 import it.prisma.prismabooking.model.room.RoomDTO;
 import it.prisma.prismabooking.service.RoomService;
-import it.prisma.prismabooking.utils.BadRequestException;
+import it.prisma.prismabooking.utils.exceptions.BadRequestException;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -41,8 +41,8 @@ public class RoomController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public Page<Room> findPage(@Parameter(description = "ID of a building") @PathVariable("buildingId") Integer buildingId,
-                                  @Parameter(description = "The offset of the first item in the collection to return") @RequestParam Integer offset,
-                                  @Parameter(description = "The maximum number of entries to return") @RequestParam Integer limit) {
+                               @Parameter(description = "The offset of the first item in the collection to return") @RequestParam Integer offset,
+                               @Parameter(description = "The maximum number of entries to return") @RequestParam Integer limit) {
         return roomService.findPage(offset, limit, buildingId);
     }
 
@@ -60,7 +60,7 @@ public class RoomController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Room createRoom(@Parameter(description = "ID of a building") @PathVariable("buildingId") Integer buildingId,
-                              @RequestBody Room room) {
+                           @RequestBody Room room) {
         if (room.getId() != null)
             throw new BadRequestException("Cannot POST resource that already have an ID");
         return roomService.createRoom(room, buildingId);
@@ -80,8 +80,9 @@ public class RoomController {
     @GetMapping("/{roomId}")
     @ResponseStatus(HttpStatus.OK)
     public Room findRoom(@Parameter(description = "ID of a building") @PathVariable("buildingId") Integer buildingId,
-                            @Parameter(description = "ID of a room") @PathVariable("roomId") Integer roomId) {
-        return roomService.findRoom(buildingId, roomId);
+                         @Parameter(description = "ID of a room") @PathVariable("roomId") Integer roomId) {
+        Room r = roomService.findRoom(buildingId, roomId);
+        return r;
     }
 
     @Operation(summary = "Update existing room",
@@ -98,8 +99,8 @@ public class RoomController {
     @PutMapping("/{roomId}")
     @ResponseStatus(HttpStatus.OK)
     public Room updateRoom(@Parameter(description = "ID of a building") @PathVariable("buildingId") Integer buildingId,
-                              @Parameter(description = "ID of a room") @PathVariable("roomId") Integer roomId,
-                              @RequestBody Room room) {
+                           @Parameter(description = "ID of a room") @PathVariable("roomId") Integer roomId,
+                           @RequestBody Room room) {
         return roomService.updateRoom(room, buildingId, roomId);
     }
 

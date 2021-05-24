@@ -1,9 +1,10 @@
-package it.prisma.prismabooking.utils;
+package it.prisma.prismabooking.utils.serializer;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import it.prisma.prismabooking.model.building.Building;
+import it.prisma.prismabooking.utils.exceptions.InternalServerErrorException;
 
 import java.io.IOException;
 

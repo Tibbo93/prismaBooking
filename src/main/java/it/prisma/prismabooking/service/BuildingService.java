@@ -6,7 +6,7 @@ import it.prisma.prismabooking.model.building.Building;
 import it.prisma.prismabooking.model.building.BuildingDTO;
 import it.prisma.prismabooking.repository.BuildingRepository;
 import it.prisma.prismabooking.utils.BuildingMapper;
-import it.prisma.prismabooking.utils.NotFoundException;
+import it.prisma.prismabooking.utils.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.data.domain.Page;
