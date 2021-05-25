@@ -21,8 +21,8 @@ import java.util.Set;
 public class UserService {
 
     protected final ConfigurationComponent config;
-    private final UserRepository userRepository;
-    private BuildingService buildingService;
+    final UserRepository userRepository;
+    BuildingService buildingService;
 
     public UserService(ConfigurationComponent configurationComponent, UserRepository userRepository) {
         this.config = configurationComponent;

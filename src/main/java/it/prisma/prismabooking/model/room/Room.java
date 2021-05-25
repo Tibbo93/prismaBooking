@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import it.prisma.prismabooking.model.building.Building;
 import lombok.*;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 
@@ -53,7 +54,7 @@ public class Room {
     @Column(name = "n_bathrooms")
     private BigDecimal bathrooms;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "building_id", referencedColumnName = "id")
     @JsonIgnore
     private Building building;

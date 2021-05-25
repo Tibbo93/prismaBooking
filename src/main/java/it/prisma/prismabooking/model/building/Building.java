@@ -40,11 +40,13 @@ public class Building {
 
     private String country;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "building", cascade = CascadeType.ALL)
     @JsonIdentityReference(alwaysAsId = true)
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<Room> rooms = new ArrayList<>();
 
+    @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
@@ -56,8 +58,9 @@ public class Building {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Set<User> users = new HashSet<>();
 
+    @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "offers",
             joinColumns = {@JoinColumn(name = "building_id")},

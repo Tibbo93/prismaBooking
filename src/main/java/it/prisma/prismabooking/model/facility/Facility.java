@@ -29,7 +29,7 @@ public class Facility {
     private Boolean flagLuxury;
 
     @EqualsAndHashCode.Exclude
-    @ManyToMany(mappedBy = "facilities")
+    @ManyToMany(mappedBy = "facilities", cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<Building> buildings = new HashSet<>();
 }

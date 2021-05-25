@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import it.prisma.prismabooking.model.PagedRes;
+import it.prisma.prismabooking.model.ErrorMessage;
 import it.prisma.prismabooking.model.building.Building;
 import it.prisma.prismabooking.model.building.BuildingProjection;
 import it.prisma.prismabooking.service.BuildingService;
@@ -147,5 +147,69 @@ public class BuildingController {
                                                   @Parameter(description = "The offset of the first item in the collection to return") @RequestParam Integer offset,
                                                   @Parameter(description = "The maximum number of entries to return") @RequestParam Integer limit) {
         return buildingService.findBuildingsOfFacility(offset, limit, facilityId);
+    }
+
+    @Operation(summary = "Add new building user relationship",
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "Created",
+                            content = @Content),
+                    @ApiResponse(responseCode = "400", description = "Bad request",
+                            content = {@Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class))}),
+                    @ApiResponse(responseCode = "404", description = "Building or user not found",
+                            content = {@Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class))})})
+    @PostMapping("/buildings/{buildingId}/users/{userId}")
+    public void addBuildingUser(@Parameter(description = "ID of a building") @PathVariable("buildingId") Integer buildingId,
+                                @Parameter(description = "ID of a user") @PathVariable("userId") Integer userId) {
+        buildingService.addBuildingUser(buildingId, userId);
+    }
+
+    @Operation(summary = "Delete an existing building user relationship",
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "No content",
+                            content = @Content),
+                    @ApiResponse(responseCode = "400", description = "Bad request",
+                            content = {@Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class))}),
+                    @ApiResponse(responseCode = "404", description = "Building or user not found",
+                            content = {@Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class))})})
+    @DeleteMapping("/buildings/{buildingId}/users/{userId}")
+    public void deleteBuildingUser(@Parameter(description = "ID of a building") @PathVariable("buildingId") Integer buildingId,
+                                   @Parameter(description = "ID of a user") @PathVariable("userId") Integer userId) {
+        buildingService.deleteBuildingUser(buildingId, userId);
+    }
+
+    @Operation(summary = "Add new building facility relationship",
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "Created",
+                            content = @Content),
+                    @ApiResponse(responseCode = "400", description = "Bad request",
+                            content = {@Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class))}),
+                    @ApiResponse(responseCode = "404", description = "Building or user not found",
+                            content = {@Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class))})})
+    @PostMapping("/buildings/{buildingId}/facilities/{facilityId}")
+    public void addBuildingFacility(@Parameter(description = "ID of a building") @PathVariable("buildingId") Integer buildingId,
+                                    @Parameter(description = "ID of a facility") @PathVariable("facilityId") Integer facilityId) {
+        buildingService.addBuildingFacility(buildingId, facilityId);
+    }
+
+    @Operation(summary = "Delete an existing building facility relationship",
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "No content",
+                            content = @Content),
+                    @ApiResponse(responseCode = "400", description = "Bad request",
+                            content = {@Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class))}),
+                    @ApiResponse(responseCode = "404", description = "Building or user not found",
+                            content = {@Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class))})})
+    @DeleteMapping("/buildings/{buildingId}/facilities/{facilityId}")
+    public void deleteBuildingFacility(@Parameter(description = "ID of a building") @PathVariable("buildingId") Integer buildingId,
+                                       @Parameter(description = "ID of a facility") @PathVariable("facilityId") Integer facilityId) {
+        buildingService.deleteBuildingFacility(buildingId, facilityId);
     }
 }

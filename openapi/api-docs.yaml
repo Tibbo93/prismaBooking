@@ -1,9 +1,10 @@
 openapi: 3.0.1
 info:
-  title: PrismaBooking API Documentation
-  version: 1.0.0
+  title: OpenAPI definition
+  version: v0
 servers:
 - url: http://localhost:8081
+  description: Generated server url
 tags:
 - name: buildings
   description: The Building API
@@ -26,7 +27,8 @@ paths:
         description: ID of a user
         required: true
         schema:
-          type: string
+          type: integer
+          format: int32
       responses:
         "409":
           description: Conflict
@@ -65,7 +67,8 @@ paths:
         description: ID of a user
         required: true
         schema:
-          type: string
+          type: integer
+          format: int32
       requestBody:
         description: User object that needs to be updated
         content:
@@ -107,7 +110,8 @@ paths:
         description: ID of a user
         required: true
         schema:
-          type: string
+          type: integer
+          format: int32
       responses:
         "409":
           description: Conflict
@@ -143,7 +147,8 @@ paths:
         description: ID of a facility
         required: true
         schema:
-          type: string
+          type: integer
+          format: int32
       responses:
         "409":
           description: Conflict
@@ -182,7 +187,8 @@ paths:
         description: ID of a facility
         required: true
         schema:
-          type: string
+          type: integer
+          format: int32
       requestBody:
         description: Facility object that needs to be updated
         content:
@@ -224,7 +230,8 @@ paths:
         description: ID of a facility
         required: true
         schema:
-          type: string
+          type: integer
+          format: int32
       responses:
         "409":
           description: Conflict
@@ -260,7 +267,8 @@ paths:
         description: ID of a building
         required: true
         schema:
-          type: string
+          type: integer
+          format: int32
       responses:
         "409":
           description: Conflict
@@ -299,7 +307,8 @@ paths:
         description: ID of a building
         required: true
         schema:
-          type: string
+          type: integer
+          format: int32
       requestBody:
         description: Building object that needs to be updated
         content:
@@ -341,7 +350,8 @@ paths:
         description: ID of a building
         required: true
         schema:
-          type: string
+          type: integer
+          format: int32
       responses:
         "409":
           description: Conflict
@@ -377,13 +387,15 @@ paths:
         description: ID of a building
         required: true
         schema:
-          type: string
+          type: integer
+          format: int32
       - name: roomId
         in: path
         description: ID of a room
         required: true
         schema:
-          type: string
+          type: integer
+          format: int32
       responses:
         "409":
           description: Conflict
@@ -422,13 +434,15 @@ paths:
         description: ID of a building
         required: true
         schema:
-          type: string
+          type: integer
+          format: int32
       - name: roomId
         in: path
         description: ID of a room
         required: true
         schema:
-          type: string
+          type: integer
+          format: int32
       requestBody:
         description: Room object that needs to be updated
         content:
@@ -470,13 +484,15 @@ paths:
         description: ID of a building
         required: true
         schema:
-          type: string
+          type: integer
+          format: int32
       - name: roomId
         in: path
         description: ID of a room
         required: true
         schema:
-          type: string
+          type: integer
+          format: int32
       responses:
         "409":
           description: Conflict
@@ -543,14 +559,14 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/ErrorMessage'
-        "403":
-          description: Access is forbidden to the resources
         "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PagedRes'
+                $ref: '#/components/schemas/Page'
+        "403":
+          description: Access is forbidden to the resources
     post:
       tags:
       - users
@@ -632,14 +648,14 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/ErrorMessage'
-        "403":
-          description: Access is forbidden to the resources
         "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PagedRes'
+                $ref: '#/components/schemas/Page'
+        "403":
+          description: Access is forbidden to the resources
     post:
       tags:
       - facilities
@@ -721,14 +737,14 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/ErrorMessage'
-        "403":
-          description: Access is forbidden to the resources
         "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PagedRes'
+                $ref: '#/components/schemas/Page'
+        "403":
+          description: Access is forbidden to the resources
     post:
       tags:
       - buildings
@@ -767,6 +783,101 @@ paths:
           description: Created
         "405":
           description: Invalid input
+  /api/v1/buildings/{buildingId}/users/{userId}:
+    post:
+      tags:
+      - buildings
+      summary: Add new building user relationship
+      operationId: addBuildingUser
+      parameters:
+      - name: buildingId
+        in: path
+        description: ID of a building
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: userId
+        in: path
+        description: ID of a user
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "500":
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "404":
+          description: Building or user not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "201":
+          description: Created
+    delete:
+      tags:
+      - buildings
+      summary: Delete an existing building user relationship
+      operationId: deleteBuildingUser
+      parameters:
+      - name: buildingId
+        in: path
+        description: ID of a building
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: userId
+        in: path
+        description: ID of a user
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "500":
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "404":
+          description: Building or user not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "204":
+          description: No content
   /api/v1/buildings/{buildingId}/rooms:
     get:
       tags:
@@ -779,7 +890,8 @@ paths:
         description: ID of a building
         required: true
         schema:
-          type: string
+          type: integer
+          format: int32
       - name: offset
         in: query
         description: The offset of the first item in the collection to return
@@ -813,14 +925,14 @@ paths:
         "404":
           description: Building not found
           content: {}
-        "403":
-          description: Access is forbidden to the resources
         "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PagedRes'
+                $ref: '#/components/schemas/Page'
+        "403":
+          description: Access is forbidden to the resources
     post:
       tags:
       - rooms
@@ -832,7 +944,8 @@ paths:
         description: ID of a building
         required: true
         schema:
-          type: string
+          type: integer
+          format: int32
       requestBody:
         description: Room object that needs to be added
         content:
@@ -863,6 +976,101 @@ paths:
           description: Created
         "405":
           description: Invalid input
+  /api/v1/buildings/{buildingId}/facilities/{facilityId}:
+    post:
+      tags:
+      - buildings
+      summary: Add new building facility relationship
+      operationId: addBuildingFacility
+      parameters:
+      - name: buildingId
+        in: path
+        description: ID of a building
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: facilityId
+        in: path
+        description: ID of a facility
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "500":
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "404":
+          description: Building or user not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "201":
+          description: Created
+    delete:
+      tags:
+      - buildings
+      summary: Delete an existing building facility relationship
+      operationId: deleteBuildingFacility
+      parameters:
+      - name: buildingId
+        in: path
+        description: ID of a building
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: facilityId
+        in: path
+        description: ID of a facility
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "409":
+          description: Conflict
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "500":
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "404":
+          description: Building or user not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "204":
+          description: No content
   /api/v1/users/{userId}/buildings:
     get:
       tags:
@@ -875,7 +1083,8 @@ paths:
         description: ID of a user
         required: true
         schema:
-          type: string
+          type: integer
+          format: int32
       - name: offset
         in: query
         description: The offset of the first item in the collection to return
@@ -909,14 +1118,14 @@ paths:
         "404":
           description: User not found
           content: {}
-        "403":
-          description: Access is forbidden to the resources
         "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PagedRes'
+                $ref: '#/components/schemas/Page'
+        "403":
+          description: Access is forbidden to the resources
   /api/v1/facilities/{facilityId}/buildings:
     get:
       tags:
@@ -929,7 +1138,8 @@ paths:
         description: ID of a facility
         required: true
         schema:
-          type: string
+          type: integer
+          format: int32
       - name: offset
         in: query
         description: The offset of the first item in the collection to return
@@ -963,14 +1173,14 @@ paths:
         "404":
           description: Facility not found
           content: {}
-        "403":
-          description: Access is forbidden to the resources
         "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PagedRes'
+                $ref: '#/components/schemas/Page'
+        "403":
+          description: Access is forbidden to the resources
   /api/v1/buildings/{buildingId}/users:
     get:
       tags:
@@ -983,7 +1193,8 @@ paths:
         description: ID of a building
         required: true
         schema:
-          type: string
+          type: integer
+          format: int32
       - name: offset
         in: query
         description: The offset of the first item in the collection to return
@@ -1017,14 +1228,14 @@ paths:
         "404":
           description: Building not found
           content: {}
-        "403":
-          description: Access is forbidden to the resources
         "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PagedRes'
+                $ref: '#/components/schemas/Page'
+        "403":
+          description: Access is forbidden to the resources
   /api/v1/buildings/{buildingId}/facilities:
     get:
       tags:
@@ -1037,7 +1248,8 @@ paths:
         description: ID of a building
         required: true
         schema:
-          type: string
+          type: integer
+          format: int32
       - name: offset
         in: query
         description: The offset of the first item in the collection to return
@@ -1098,7 +1310,8 @@ components:
       type: object
       properties:
         id:
-          type: string
+          type: integer
+          format: int32
         firstName:
           type: string
         lastName:
@@ -1114,27 +1327,24 @@ components:
           type: string
         telephoneNumber:
           type: string
-        buildingsId:
-          type: array
-          items:
-            type: string
     Facility:
       type: object
       properties:
         id:
-          type: string
+          type: integer
+          format: int32
         name:
           type: string
         price:
           type: number
-          format: double
         flagLuxury:
           type: boolean
     Building:
       type: object
       properties:
         id:
-          type: string
+          type: integer
+          format: int32
         telephoneNumber:
           type: string
         email:
@@ -1155,27 +1365,34 @@ components:
           type: string
         country:
           type: string
-        facilitiesId:
+        rooms:
           type: array
           items:
-            type: string
+            $ref: '#/components/schemas/Room'
+        users:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+        facilities:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/Facility'
     Room:
       type: object
       properties:
         id:
-          type: string
+          type: integer
+          format: int32
         size:
           type: number
-          format: double
         priceLowSeason:
           type: number
-          format: double
         priceMidSeason:
           type: number
-          format: double
         priceHighSeason:
           type: number
-          format: double
         flagBalcony:
           type: boolean
         flagShower:
@@ -1190,16 +1407,70 @@ components:
           - JUNIOR_SUITE
           - DELUXE_SUITE
         singleBeds:
-          type: integer
-          format: int32
+          type: number
         queenSizeBeds:
-          type: integer
-          format: int32
+          type: number
         bathrooms:
+          type: number
+    Page:
+      type: object
+      properties:
+        totalPages:
           type: integer
           format: int32
-        buildingId:
-          type: string
+        totalElements:
+          type: integer
+          format: int64
+        size:
+          type: integer
+          format: int32
+        content:
+          type: array
+          items:
+            type: object
+        number:
+          type: integer
+          format: int32
+        sort:
+          $ref: '#/components/schemas/Sort'
+        first:
+          type: boolean
+        last:
+          type: boolean
+        numberOfElements:
+          type: integer
+          format: int32
+        pageable:
+          $ref: '#/components/schemas/Pageable'
+        empty:
+          type: boolean
+    Pageable:
+      type: object
+      properties:
+        offset:
+          type: integer
+          format: int64
+        sort:
+          $ref: '#/components/schemas/Sort'
+        pageSize:
+          type: integer
+          format: int32
+        pageNumber:
+          type: integer
+          format: int32
+        paged:
+          type: boolean
+        unpaged:
+          type: boolean
+    Sort:
+      type: object
+      properties:
+        sorted:
+          type: boolean
+        unsorted:
+          type: boolean
+        empty:
+          type: boolean
     PagedRes:
       type: object
       properties:

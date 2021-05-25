@@ -37,6 +37,7 @@ public class User {
     @Column(name = "telephone_number")
     private String telephoneNumber;
 
+    @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @ManyToMany(mappedBy = "users", cascade = CascadeType.ALL)
     @JsonIgnore

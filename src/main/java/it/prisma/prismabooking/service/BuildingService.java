@@ -3,6 +3,8 @@ package it.prisma.prismabooking.service;
 import it.prisma.prismabooking.component.ConfigurationComponent;
 import it.prisma.prismabooking.model.building.Building;
 import it.prisma.prismabooking.model.building.BuildingProjection;
+import it.prisma.prismabooking.model.facility.Facility;
+import it.prisma.prismabooking.model.user.User;
 import it.prisma.prismabooking.repository.BuildingRepository;
 import it.prisma.prismabooking.utils.exceptions.InternalServerErrorException;
 import it.prisma.prismabooking.utils.exceptions.NotFoundException;
@@ -81,6 +83,38 @@ public class BuildingService {
     public Page<Building> findBuildingsOfFacility(Integer offset, Integer limit, Integer facilityId) {
         Pageable page = PageRequest.of(offset, limit);
         return buildingRepository.findAllByFacilitiesId(page, facilityId);
+    }
+
+    @Transactional
+    public void addBuildingUser(Integer buildingId, Integer userId) {
+        Building building = findBuilding(buildingId);
+        User user = userService.findUser(userId);
+        building.getUsers().add(user);
+        buildingRepository.save(building);
+    }
+
+    @Transactional
+    public void deleteBuildingUser(Integer buildingId, Integer userId) {
+        Building building = findBuilding(buildingId);
+        User user = userService.findUser(userId);
+        building.getUsers().remove(user);
+        buildingRepository.save(building);
+    }
+
+    @Transactional
+    public void addBuildingFacility(Integer buildingId, Integer facilityId) {
+        Building building = findBuilding(buildingId);
+        Facility facility = facilityService.findFacility(facilityId);
+        building.getFacilities().add(facility);
+        buildingRepository.save(building);
+    }
+
+    @Transactional
+    public void deleteBuildingFacility(Integer buildingId, Integer facilityId) {
+        Building building = findBuilding(buildingId);
+        Facility facility = facilityService.findFacility(facilityId);
+        building.getFacilities().remove(facility);
+        buildingRepository.save(building);
     }
 }
 
