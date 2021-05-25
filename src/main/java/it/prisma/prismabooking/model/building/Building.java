@@ -14,7 +14,6 @@ import java.util.Set;
 
 @Entity
 @Table(name = "building")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = Building.class)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -29,7 +28,7 @@ public class Building {
     private String email;
 
     @Column(name = "flag_wifi")
-    private boolean flagWiFi;
+    private Boolean flagWiFi;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "category", columnDefinition = "ENUM('economy', 'family', 'junior_suite', 'deluxe_suite')", nullable = false)
@@ -43,6 +42,7 @@ public class Building {
 
     @OneToMany(mappedBy = "building", cascade = CascadeType.ALL)
     @JsonIdentityReference(alwaysAsId = true)
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<Room> rooms = new ArrayList<>();
 
     @EqualsAndHashCode.Exclude
@@ -52,7 +52,8 @@ public class Building {
             joinColumns = {@JoinColumn(name = "building_id")},
             inverseJoinColumns = {@JoinColumn(name = "user_id")}
     )
-    @JsonBackReference
+    @JsonIdentityReference(alwaysAsId = true)
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Set<User> users = new HashSet<>();
 
     @EqualsAndHashCode.Exclude
@@ -62,6 +63,19 @@ public class Building {
             joinColumns = {@JoinColumn(name = "building_id")},
             inverseJoinColumns = {@JoinColumn(name = "service_id")}
     )
-    @JsonBackReference
+    @JsonIdentityReference(alwaysAsId = true)
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Set<Facility> facilities = new HashSet<>();
+
+    public Building(Integer id, String telephoneNumber, String email, Boolean flagWiFi,
+                    BuildingType buildingType, String street, String city, String country) {
+        this.id = id;
+        this.telephoneNumber = telephoneNumber;
+        this.email = email;
+        this.flagWiFi = flagWiFi;
+        this.buildingType = buildingType;
+        this.street = street;
+        this.city = city;
+        this.country = country;
+    }
 }

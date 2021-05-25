@@ -9,7 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import it.prisma.prismabooking.model.PagedRes;
 import it.prisma.prismabooking.model.building.Building;
-import it.prisma.prismabooking.model.building.BuildingDTO;
+import it.prisma.prismabooking.model.building.BuildingProjection;
 import it.prisma.prismabooking.service.BuildingService;
 import it.prisma.prismabooking.utils.exceptions.BadRequestException;
 import org.springframework.data.domain.Page;
@@ -40,7 +40,7 @@ public class BuildingController {
     @ResponseStatus(HttpStatus.OK)
     public Page<Building> findPage(@Parameter(description = "The offset of the first item in the collection to return") @RequestParam Integer offset,
                                    @Parameter(description = "The maximum number of entries to return") @RequestParam Integer limit) {
-        return buildingService.findPage2(offset, limit);
+        return buildingService.findPage(offset, limit);
     }
 
     @Operation(summary = "Add new building",
@@ -57,7 +57,7 @@ public class BuildingController {
     public Building createBuilding(@RequestBody Building building) {
         if (building.getId() != null)
             throw new BadRequestException("Cannot POST resource that already have an ID");
-        return buildingService.createResource2(building);
+        return buildingService.createBuilding(building);
     }
 
     @Operation(summary = "Find building by ID",
@@ -74,7 +74,7 @@ public class BuildingController {
     @GetMapping("/buildings/{buildingId}")
     @ResponseStatus(HttpStatus.OK)
     public Building findBuilding(@Parameter(description = "ID of a building") @PathVariable("buildingId") Integer buildingId) {
-        return buildingService.findResource2(buildingId);
+        return buildingService.findBuilding(buildingId);
     }
 
     @Operation(summary = "Update existing building",
@@ -91,8 +91,8 @@ public class BuildingController {
     @PutMapping("/buildings/{buildingId}")
     @ResponseStatus(HttpStatus.OK)
     public Building updateBuilding(@Parameter(description = "ID of a building") @PathVariable("buildingId") Integer buildingId,
-                                   @RequestBody BuildingDTO buildingDTO) {
-        return buildingService.updateBuilding(buildingDTO, buildingId);
+                                   @RequestBody Building building) {
+        return buildingService.updateBuilding(building, buildingId);
     }
 
     @Operation(summary = "Delete existing building",
@@ -115,7 +115,7 @@ public class BuildingController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = PagedRes.class))}),
+                            schema = @Schema(implementation = Page.class))}),
             @ApiResponse(responseCode = "400", description = "Bad request",
                     content = @Content),
             @ApiResponse(responseCode = "403", description = "Access is forbidden to the resources",
@@ -124,9 +124,9 @@ public class BuildingController {
                     content = @Content)
     })
     @GetMapping("/users/{userId}/buildings")
-    public PagedRes<Building> findBuildingsOfUser(@Parameter(description = "ID of a user") @PathVariable("userId") String userId,
-                                                  @Parameter(description = "The offset of the first item in the collection to return") @RequestParam Integer offset,
-                                                  @Parameter(description = "The maximum number of entries to return") @RequestParam Integer limit) {
+    public Page<BuildingProjection> findBuildingsOfUser(@Parameter(description = "ID of a user") @PathVariable("userId") Integer userId,
+                                                        @Parameter(description = "The offset of the first item in the collection to return") @RequestParam Integer offset,
+                                                        @Parameter(description = "The maximum number of entries to return") @RequestParam Integer limit) {
         return buildingService.findBuildingsOfUser(offset, limit, userId);
     }
 
@@ -134,7 +134,7 @@ public class BuildingController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = PagedRes.class))}),
+                            schema = @Schema(implementation = Page.class))}),
             @ApiResponse(responseCode = "400", description = "Bad request",
                     content = @Content),
             @ApiResponse(responseCode = "403", description = "Access is forbidden to the resources",
@@ -143,7 +143,7 @@ public class BuildingController {
                     content = @Content)
     })
     @GetMapping("/facilities/{facilityId}/buildings")
-    public PagedRes<Building> findBuildingsOfFacility(@Parameter(description = "ID of a facility") @PathVariable("facilityId") String facilityId,
+    public Page<Building> findBuildingsOfFacility(@Parameter(description = "ID of a facility") @PathVariable("facilityId") Integer facilityId,
                                                   @Parameter(description = "The offset of the first item in the collection to return") @RequestParam Integer offset,
                                                   @Parameter(description = "The maximum number of entries to return") @RequestParam Integer limit) {
         return buildingService.findBuildingsOfFacility(offset, limit, facilityId);

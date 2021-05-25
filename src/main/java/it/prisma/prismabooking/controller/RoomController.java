@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import it.prisma.prismabooking.model.room.Room;
-import it.prisma.prismabooking.model.room.RoomDTO;
 import it.prisma.prismabooking.service.RoomService;
 import it.prisma.prismabooking.utils.exceptions.BadRequestException;
 import org.springframework.data.domain.Page;
@@ -70,7 +69,7 @@ public class RoomController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "Success",
                             content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = RoomDTO.class))),
+                                    schema = @Schema(implementation = Room.class))),
                     @ApiResponse(responseCode = "400", description = "Bad request",
                             content = @Content),
                     @ApiResponse(responseCode = "403", description = "Access is forbidden to the resource",
@@ -81,8 +80,7 @@ public class RoomController {
     @ResponseStatus(HttpStatus.OK)
     public Room findRoom(@Parameter(description = "ID of a building") @PathVariable("buildingId") Integer buildingId,
                          @Parameter(description = "ID of a room") @PathVariable("roomId") Integer roomId) {
-        Room r = roomService.findRoom(buildingId, roomId);
-        return r;
+        return roomService.findRoom(buildingId, roomId);
     }
 
     @Operation(summary = "Update existing room",
@@ -118,6 +116,6 @@ public class RoomController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteRoom(@Parameter(description = "ID of a building") @PathVariable("buildingId") Integer buildingId,
                            @Parameter(description = "ID of a room") @PathVariable("roomId") Integer roomId) {
-        this.roomService.deleteRoom(roomId, buildingId);
+        roomService.deleteRoom(roomId, buildingId);
     }
 }

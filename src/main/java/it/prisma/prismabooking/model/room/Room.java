@@ -1,7 +1,7 @@
 package it.prisma.prismabooking.model.room;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import it.prisma.prismabooking.model.building.Building;
 import lombok.*;
@@ -14,7 +14,6 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Builder
 public class Room {
 
     @Id
@@ -54,9 +53,8 @@ public class Room {
     @Column(name = "n_bathrooms")
     private BigDecimal bathrooms;
 
-    @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "building_id", referencedColumnName = "id")
-    @JsonIdentityReference(alwaysAsId = true)
+    @JsonIgnore
     private Building building;
 }

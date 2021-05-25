@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -34,15 +35,14 @@ public class UserService {
     }
 
     public Page<User> findPage(Integer offset, Integer limit) {
-        Pageable page = PageRequest.of(offset, limit);
-        return userRepository.findAll(page);
+        return userRepository.findAll(PageRequest.of(offset, limit));
     }
 
     public User createUser(User user) {
         Set<Building> buildings = new HashSet<>();
         user.getBuildings().stream()
                 .map(Building::getId)
-                .forEach(id -> buildings.add(buildingService.findResource2(id)));
+                .forEach(id -> buildings.add(buildingService.findBuilding(id)));
         user.setBuildings(buildings);
         return userRepository.save(user);
     }
@@ -52,9 +52,9 @@ public class UserService {
                 .orElseThrow(() -> new NotFoundException("User not found with id: " + userId));
     }
 
+    @Transactional
     public User updateUser(User user, Integer userId) {
-        User userInDB = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("User not found with id: " + userId));
+        User userInDB = findUser(userId);
 
         Arrays.stream(user.getClass().getDeclaredFields())
                 .forEach(f -> {
@@ -70,11 +70,12 @@ public class UserService {
     }
 
     public void deleteUser(Integer userId) {
+        findUser(userId);
         userRepository.deleteById(userId);
     }
 
     public Page<User> findUsersByBuilding(Integer offset, Integer limit, Integer buildingId) {
-        Building building = buildingService.findResource2(buildingId);
+        Building building = buildingService.findBuilding(buildingId);
         Pageable page = PageRequest.of(offset, limit);
         return userRepository.findAllByBuildings(page, building);
     }

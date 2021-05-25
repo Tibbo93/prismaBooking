@@ -1,30 +1,30 @@
 package it.prisma.prismabooking.service;
 
 import it.prisma.prismabooking.component.ConfigurationComponent;
-import it.prisma.prismabooking.model.PagedRes;
 import it.prisma.prismabooking.model.building.Building;
-import it.prisma.prismabooking.model.building.BuildingDTO;
+import it.prisma.prismabooking.model.building.BuildingProjection;
 import it.prisma.prismabooking.repository.BuildingRepository;
-import it.prisma.prismabooking.utils.BuildingMapper;
+import it.prisma.prismabooking.utils.exceptions.InternalServerErrorException;
 import it.prisma.prismabooking.utils.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Arrays;
 
 @Service
-public class BuildingService extends BaseService<Building>{
+public class BuildingService {
 
+    ConfigurationComponent config;
     UserService userService;
     FacilityService facilityService;
     private final BuildingRepository buildingRepository;
 
     public BuildingService(ConfigurationComponent configurationComponent, BuildingRepository buildingRepository) {
-        super.config = configurationComponent;
-        super.resourceFile = new DefaultResourceLoader().getResource("file:src/main/resources/data/buildings.json");
-        super.resourceType = "Building";
+        this.config = configurationComponent;
         this.buildingRepository = buildingRepository;
     }
 
@@ -38,46 +38,49 @@ public class BuildingService extends BaseService<Building>{
         this.facilityService = facilityService;
     }
 
-    public Page<Building> findPage2(Integer offset, Integer limit) {
-        Pageable page = PageRequest.of(offset, limit);
-        return buildingRepository.findAll(page);
+    public Page<Building> findPage(Integer offset, Integer limit) {
+        return buildingRepository.findAll(PageRequest.of(offset, limit));
     }
 
-    public Building findResource2(Integer id) {
+    public Building findBuilding(Integer id) {
         return buildingRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Building not found with id: " + id));
     }
 
-    public Building createResource2(Building building) {
+    public Building createBuilding(Building building) {
         return buildingRepository.save(building);
     }
 
     public void deleteBuilding(Integer buildingId) {
+        findBuilding(buildingId);
         buildingRepository.deleteById(buildingId);
     }
 
-    public Building updateBuilding(BuildingDTO buildingDTO, Integer buildingId) {
-        Building buildingEntity = buildingRepository.findById(buildingId)
-                .orElseThrow(() -> new NotFoundException("Building not found with id: " + buildingDTO.getId()));
+    @Transactional
+    public Building updateBuilding(Building building, Integer buildingId) {
+        Building buildingInDB = findBuilding(buildingId);
 
-        BuildingMapper.INSTANCE.updateBuildingFromDTO(buildingDTO, buildingEntity);
-        return buildingRepository.save(buildingEntity);
+        Arrays.stream(building.getClass().getDeclaredFields())
+                .forEach(f -> {
+                    try {
+                        f.setAccessible(true);
+                        if (f.get(building) != null)
+                            f.set(buildingInDB, f.get(building));
+                    } catch (IllegalAccessException e) {
+                        throw new InternalServerErrorException(e.getMessage());
+                    }
+                });
+
+        return buildingRepository.save(buildingInDB);
     }
 
-    public PagedRes<Building> findBuildingsOfUser(Integer offset, Integer limit, String userId) {
-        return null;
-        /*List<Building> buildings = new ArrayList<>();
-        User user = userService.findResource(userId);
-        user.getBuildingsId()
-                .forEach(buildingId -> buildings.add(findResource(buildingId)));
-        return findPage(offset, limit, buildings);*/
+    public Page<BuildingProjection> findBuildingsOfUser(Integer offset, Integer limit, Integer userId) {
+        return buildingRepository.findAllByUserId(PageRequest.of(offset, limit), userId);
     }
 
-    public PagedRes<Building> findBuildingsOfFacility(Integer offset, Integer limit, String facilityId) {
-        return null;
-        /*return findPage(offset, limit, list.stream()
-                .filter(building -> building.getFacilitiesId().contains(facilityId))
-                .collect(Collectors.toList()));*/
+    public Page<Building> findBuildingsOfFacility(Integer offset, Integer limit, Integer facilityId) {
+        Pageable page = PageRequest.of(offset, limit);
+        return buildingRepository.findAllByFacilitiesId(page, facilityId);
     }
 }
 

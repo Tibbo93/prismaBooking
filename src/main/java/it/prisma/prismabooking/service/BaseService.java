@@ -1,6 +1,5 @@
 package it.prisma.prismabooking.service;
 
-import com.google.gson.Gson;
 import it.prisma.prismabooking.component.ConfigurationComponent;
 import it.prisma.prismabooking.model.PagedRes;
 import it.prisma.prismabooking.utils.exceptions.InternalServerErrorException;
@@ -25,8 +24,6 @@ public class BaseService<T> {
     protected ConfigurationComponent config;
     protected List<T> list = new ArrayList<>();
     Resource resourceFile;
-    @Autowired
-    protected Gson gson;
     protected String resourceType;
 
     public PagedRes<T> findPage(Integer offset, Integer limit) {
@@ -56,7 +53,7 @@ public class BaseService<T> {
                 .orElseThrow(() -> new NotFoundException(resourceType + " not found with id: " + id));
     }
 
-    public T createResource(T resource) {
+    /*public T createResource(T resource) {
         try {
             String id = (String) Arrays.stream(resource.getClass().getDeclaredMethods()).sequential()
                     .filter(method -> method.getName().equals("getId"))
@@ -79,12 +76,12 @@ public class BaseService<T> {
         list.add(resource);
         writeOnJSON(resource);
         return resource;
-    }
+    }*/
 
-    public void deleteResource(String resourceId) {
+   /* public void deleteResource(String resourceId) {
         list.remove(findResource(resourceId));
         deleteFromJSON();
-    }
+    }*/
 
     public PagedRes<T> createPage(Integer offset, Integer limit, List<T> content) {
         limit = handleLimit(limit);
@@ -117,7 +114,7 @@ public class BaseService<T> {
                 .orElse(0);
     }
 
-    protected void loadJSON(Class<T> clazz) {
+    /*protected void loadJSON(Class<T> clazz) {
         if (!resourceFile.exists())
             return;
         try (Stream<String> lines = Files.lines(resourceFile.getFile().toPath())) {
@@ -126,9 +123,9 @@ public class BaseService<T> {
             log.error("Error parsing line with cause: {}", e.getMessage());
             throw new InternalServerErrorException("Error parsing line with cause: " + e.getMessage());
         }
-    }
+    }*/
 
-    protected void writeOnJSON(T resource) {
+   /* protected void writeOnJSON(T resource) {
         try {
             Files.write(resourceFile.getFile().toPath(),
                     gson.toJson(resource).concat(System.lineSeparator()).getBytes(StandardCharsets.UTF_8),
@@ -137,9 +134,9 @@ public class BaseService<T> {
             log.error(e.getMessage());
             throw new InternalServerErrorException("Internal server error: " + e.getMessage());
         }
-    }
+    }*/
 
-    protected void deleteFromJSON() {
+    /*protected void deleteFromJSON() {
         try {
             Files.write(resourceFile.getFile().toPath(), list.stream()
                             .map(resource -> gson.toJson(resource))
@@ -149,5 +146,5 @@ public class BaseService<T> {
             log.error(e.getMessage());
             throw new InternalServerErrorException("Internal server error: " + e.getMessage());
         }
-    }
+    }*/
 }
